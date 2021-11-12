@@ -6,6 +6,6 @@ import services.restclients.schedule.models.ScheduledActionDetailModel;
 import services.restclients.schedule.models.ScheduledTestCaseModel;
 
 public interface Action {
-    void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel);
+    void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) throws Exception;
     ActionTypeDao actionName();
 }

@@ -16,10 +16,12 @@ public class BrowserAction {
     @Inject
     Instance<BrowserTypeAction> browserTypeActions;
 
-    public void action(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) {
-        if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.OPEN.name())) {
-            for (BrowserTypeAction browserTypeAction : browserTypeActions) {
+    public void action(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) throws Exception {
+        for (BrowserTypeAction browserTypeAction : browserTypeActions) {
+            if (StringUtils.equalsAnyIgnoreCase(browserTypeAction.type().name(),
+                    schedulerDto.getScheduleDetail().getScheduleIterationModel().getBrowserType())) {
                 browserTypeAction.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel);
+                break;
             }
         }
     }

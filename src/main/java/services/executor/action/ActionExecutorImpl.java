@@ -18,7 +18,11 @@ public class ActionExecutorImpl implements ActionExecutor {
     public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) {
         for (Action action : actionInstance) {
             if (action.actionName() == scheduledActionDetailModel.getType()) {
-                action.execute(schedulerDto,scheduledTestCaseModel,scheduledActionDetailModel);
+                try {
+                    action.execute(schedulerDto,scheduledTestCaseModel,scheduledActionDetailModel);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return;
             }
         }

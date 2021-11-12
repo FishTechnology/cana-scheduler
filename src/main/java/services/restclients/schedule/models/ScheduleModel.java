@@ -3,11 +3,9 @@ package services.restclients.schedule.models;
 import com.googlecode.jmapper.annotations.JMap;
 import lombok.Data;
 
-import javax.persistence.Id;
-
 @Data
 public class ScheduleModel {
-    @Id
+    @JMap
     private Long id;
     @JMap
     private Long testPlanId;

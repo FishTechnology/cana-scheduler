@@ -18,7 +18,7 @@ public class UIActionImpl implements Action {
     Instance<UIAction> uiActions;
 
     @Override
-    public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) {
+    public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) throws Exception {
         for (UIAction uiAction : uiActions) {
             if (StringUtils.equalsAnyIgnoreCase(uiAction.actionName().name(), scheduledActionDetailModel.getUiActionType())) {
                 uiAction.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel);

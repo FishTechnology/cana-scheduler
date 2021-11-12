@@ -3,11 +3,9 @@ package services.restclients.schedule.models;
 import com.googlecode.jmapper.annotations.JMap;
 import lombok.Data;
 
-import javax.persistence.Id;
-
 @Data
 public class ScheduleIterationModel {
-    @Id
+    @JMap
     private Long id;
     @JMap
     private Long scheduleId;
@@ -33,4 +31,6 @@ public class ScheduleIterationModel {
     private String createdBy;
     @JMap
     private String modifiedBy;
+    @JMap
+    private String browserType;
 }

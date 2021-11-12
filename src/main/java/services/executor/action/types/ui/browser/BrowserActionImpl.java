@@ -15,7 +15,7 @@ public class BrowserActionImpl implements UIAction {
     BrowserAction browserAction;
 
     @Override
-    public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) {
+    public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) throws Exception {
         browserAction.action(schedulerDto,scheduledTestCaseModel,scheduledActionDetailModel);
     }
 
