@@ -1,8 +1,8 @@
 package services.executor.testcase;
 
 import services.executor.dtos.SchedulerDto;
-import services.restclients.schedule.models.ScheduledTestCaseModel;
+import services.restclients.schedule.models.ScheduleTestPlanModel;
 
 public interface TestCaseExecutor {
-    void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel);
+    void execute(SchedulerDto schedulerDto, ScheduleTestPlanModel scheduledTestCaseModel);
 }

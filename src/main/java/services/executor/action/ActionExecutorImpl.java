@@ -15,15 +15,17 @@ public class ActionExecutorImpl implements ActionExecutor {
     Instance<Action> actionInstance;
 
     @Override
-    public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) {
-        for (Action action : actionInstance) {
-            if (action.actionName() == scheduledActionDetailModel.getType()) {
-                try {
-                    action.execute(schedulerDto,scheduledTestCaseModel,scheduledActionDetailModel);
-                } catch (Exception e) {
-                    e.printStackTrace();
+    public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel) {
+        for (ScheduledActionDetailModel scheduledActionDetailModel : scheduledTestCaseModel.getScheduledActionDetails()) {
+            for (Action action : actionInstance) {
+                if (action.actionName() == scheduledActionDetailModel.getType()) {
+                    try {
+                        action.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return;
                 }
-                return;
             }
         }
     }

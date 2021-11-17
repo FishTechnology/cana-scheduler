@@ -2,7 +2,7 @@ package services.executor.testcase;
 
 import services.executor.action.ActionExecutor;
 import services.executor.dtos.SchedulerDto;
-import services.restclients.schedule.models.ScheduledActionDetailModel;
+import services.restclients.schedule.models.ScheduleTestPlanModel;
 import services.restclients.schedule.models.ScheduledTestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,10 +16,10 @@ public class TestCaseExecutorImpl implements TestCaseExecutor {
     ActionExecutor actionExecutor;
 
     @Override
-    public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel) {
-        Collections.sort(scheduledTestCaseModel.getScheduledActionDetails(), (a1, a2) -> (int) (a1.getOrder() - a2.getOrder()));
-        for (ScheduledActionDetailModel scheduledActionDetailModel : scheduledTestCaseModel.getScheduledActionDetails()) {
-            actionExecutor.execute(schedulerDto,scheduledTestCaseModel, scheduledActionDetailModel);
+    public void execute(SchedulerDto schedulerDto, ScheduleTestPlanModel scheduleTestPlanModel) {
+        for (ScheduledTestCaseModel scheduledTestCaseModel : scheduleTestPlanModel.getScheduledTestCaseModel()) {
+            Collections.sort(scheduledTestCaseModel.getScheduledActionDetails(), (a1, a2) -> (int) (a1.getOrder() - a2.getOrder()));
+            actionExecutor.execute(schedulerDto, scheduledTestCaseModel);
         }
     }
 }
