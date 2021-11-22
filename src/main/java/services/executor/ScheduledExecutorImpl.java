@@ -28,7 +28,7 @@ public class ScheduledExecutorImpl implements ScheduledExecutor {
     @Override
     public void executeSchedule() {
         SchedulerDto schedulerDto = new SchedulerDto();
-        schedulerDto.setScheduleId(6L);
+        schedulerDto.setScheduleId(22L);
         try {
             var scheduleDetailModel = scheduleServiceRestClient.getScheduler(schedulerDto.getScheduleId());
             if (scheduleDetailModel == null || scheduleDetailModel.getScheduleModel() == null) {
@@ -36,11 +36,11 @@ public class ScheduledExecutorImpl implements ScheduledExecutor {
             }
             schedulerDto.setScheduleDetail(scheduleDetailModel);
 
-//            var errorMessages = scheduleServiceRestClient.copyTestPlanDetail(schedulerDto.getScheduleId());
-//            if (CollectionUtils.isNotEmpty(errorMessages)) {
-//                updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.ERROR, CanaSchedulerUtility.getMessage(errorMessages));
-//                return;
-//            }
+            var errorMessages = scheduleServiceRestClient.copyTestPlanDetail(schedulerDto.getScheduleId());
+            if (CollectionUtils.isNotEmpty(errorMessages)) {
+                updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.ERROR, CanaSchedulerUtility.getMessage(errorMessages));
+                return;
+            }
 
         } catch (Exception ex) {
 
