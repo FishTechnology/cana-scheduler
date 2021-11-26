@@ -1,6 +1,7 @@
 package services.executor;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import services.commons.CanaSchedulerUtility;
@@ -13,7 +14,9 @@ import services.restclients.schedule.models.UpdateScheduleStatusModel;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @ApplicationScoped
 public class ScheduledExecutorImpl implements ScheduledExecutor {
@@ -28,13 +31,31 @@ public class ScheduledExecutorImpl implements ScheduledExecutor {
     @Override
     public void executeSchedule() {
         SchedulerDto schedulerDto = new SchedulerDto();
-        schedulerDto.setScheduleId(22L);
+        schedulerDto.setScheduleId(39L);
+        String errorMessage = null;
+        StopWatch stopWatch = StopWatch.createStarted();
         try {
-            var scheduleDetailModel = scheduleServiceRestClient.getScheduler(schedulerDto.getScheduleId());
-            if (scheduleDetailModel == null || scheduleDetailModel.getScheduleModel() == null) {
-                return;
+            try {
+                var scheduleDetailModel = scheduleServiceRestClient.getScheduler(schedulerDto.getScheduleId());
+                if (scheduleDetailModel == null || scheduleDetailModel.getScheduleModel() == null) {
+                    return;
+                }
+                schedulerDto.setScheduleDetail(scheduleDetailModel);
+
+                validateSchedule(schedulerDto);
+
+            } catch (Exception ex) {
+
             }
-            schedulerDto.setScheduleDetail(scheduleDetailModel);
+
+            try {
+                var errors = updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.INPROGRESS);
+                if (CollectionUtils.isNotEmpty(errors)) {
+                    errorMessage = CanaSchedulerUtility.getMessage(errors);
+                }
+            } catch (Exception exception) {
+                errorMessage = CanaSchedulerUtility.getMessage(exception);
+            }
 
             var errorMessages = scheduleServiceRestClient.copyTestPlanDetail(schedulerDto.getScheduleId());
             if (CollectionUtils.isNotEmpty(errorMessages)) {
@@ -42,32 +63,44 @@ public class ScheduledExecutorImpl implements ScheduledExecutor {
                 return;
             }
 
-        } catch (Exception ex) {
 
-        }
-        StopWatch stopWatch = StopWatch.createStarted();
-        try {
-
-            var errors = updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.INPROGRESS);
-            if (CollectionUtils.isEmpty(errors)) {
-                var error = "";
+            if (StringUtils.isNotEmpty(errorMessage)) {
+                stopWatch.stop();
+                updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.ERROR, errorMessage, stopWatch.getTime());
+                return;
             }
-        } catch (Exception exception) {
 
-        }
+            try {
+                testPlanExecutor.execute(schedulerDto);
+            } catch (Exception exception) {
+                stopWatch.stop();
+                updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.ERROR, CanaSchedulerUtility.getMessage(exception), stopWatch.getTime());
+            }
 
-        try {
-            testPlanExecutor.execute(schedulerDto);
-
+            if (stopWatch.isStarted()) {
+                stopWatch.stop();
+                updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.COMPLETED, stopWatch.getTime());
+            }
         } catch (Exception exception) {
             stopWatch.stop();
             updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.ERROR, CanaSchedulerUtility.getMessage(exception), stopWatch.getTime());
         }
+    }
 
-        if (stopWatch.isStarted()) {
-            stopWatch.stop();
-            updateScheduleStatus(schedulerDto.getScheduleId(), ScheduleStatusDao.COMPLETED, stopWatch.getTime());
+    private List<ErrorMessageModel> validateSchedule(SchedulerDto schedulerDto) {
+        var scheduleTestPlanModel = schedulerDto.getScheduleDetail().getScheduleTestPlanModel();
+        if (Objects.isNull(scheduleTestPlanModel)) {
+            return CanaSchedulerUtility.getErrorMessageModels("Schedule Test Plan Model is null for scheduleId=" + schedulerDto.getScheduleId());
         }
+
+        if (Objects.isNull(
+                schedulerDto
+                        .getScheduleDetail()
+                        .getScheduleIterationModel())) {
+            return CanaSchedulerUtility.getErrorMessageModels("Schedule Iteration Model is null for scheduleId=" + schedulerDto.getScheduleId());
+        }
+
+        return Collections.emptyList();
     }
 
     private List<ErrorMessageModel> updateScheduleStatus(Long scheduleId,

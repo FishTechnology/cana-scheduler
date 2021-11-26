@@ -1,7 +1,8 @@
 package services.restclients.result.actionresult.models.enums;
 
 public enum ActionResultStatusDao {
-    ACTIVE,
-    DELETED,
+    STARTED,
+    COMPLETED,
+    ERROR,
     NOT_STARTED,
 }

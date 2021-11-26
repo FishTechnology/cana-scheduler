@@ -6,12 +6,12 @@ import org.junit.Rule;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
+import services.commons.CanaSchedulerUtility;
 import services.executor.dtos.SchedulerDto;
 import services.restclients.schedule.models.ScheduledActionDetailModel;
 import services.restclients.schedule.models.ScheduledTestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.codeborne.selenide.Selenide.open;
@@ -37,8 +37,7 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
             } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.TITLE.name())) {
                 assertTitle(scheduledActionDetailModel);
             }
-        }
-        else {
+        } else {
             if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.OPEN.name())) {
                 setup(scheduledActionDetailModel);
             } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.CLOSE.name())) {
@@ -52,7 +51,7 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
         return BrowserType.GOOGLE_CHROME;
     }
 
-    private void setup(ScheduledActionDetailModel scheduledActionDetailModel) {
+    private void setup(ScheduledActionDetailModel scheduledActionDetailModel) throws Exception {
 //        BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>()
 //                .withCapabilities(new ChromeOptions())
 //                .withRecordingMode(BrowserWebDriverContainer.VncRecordingMode.RECORD_FAILING, new File("./build/"));
@@ -67,8 +66,8 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
             if (!StringUtils.isEmpty(scheduledActionDetailModel.getBrowserValue())) {
                 open(scheduledActionDetailModel.getBrowserValue());
             }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            throw new Exception("Browser setup exception=" + CanaSchedulerUtility.getMessage(exception));
         }
     }
 

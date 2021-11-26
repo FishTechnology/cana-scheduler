@@ -1,8 +1,11 @@
 package services.executor.testplan;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import services.commons.CanaSchedulerConstants;
+import services.commons.exceptions.ExceptionStatus;
+import services.commons.exceptions.SchedulerException;
 import services.executor.dtos.SchedulerDto;
 import services.executor.testcase.TestCaseExecutor;
 import services.restclients.commons.ErrorMessageModel;
@@ -15,7 +18,6 @@ import javax.inject.Inject;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @ApplicationScoped
 public class TestPlanExecutorImpl implements TestPlanExecutor {
@@ -29,37 +31,47 @@ public class TestPlanExecutorImpl implements TestPlanExecutor {
 
     @Override
     public void execute(SchedulerDto schedulerDto) throws Exception {
+        String errorMessage = null;
+        Boolean isErrorOccurred = false;
+        OffsetDateTime startedOn = OffsetDateTime.now();
+        StopWatch stopWatch = StopWatch.createStarted();
+        isErrorOccurred = false;
+
         var testPlanResultModel = testPlanResultServiceRestClient.getTestPlanResultBySchIterId(schedulerDto
                 .getScheduleDetail()
                 .getScheduleIterationModel()
                 .getId());
-        var scheduleTestPlanModel = schedulerDto.getScheduleDetail().getScheduleTestPlanModel();
+        OffsetDateTime completedOn = OffsetDateTime.now();
 
-        if (Objects.isNull(scheduleTestPlanModel)) {
-            throw new Exception("TestPlan is null for Schedule Id =" + schedulerDto.getScheduleId());
+        if (testPlanResultModel == null) {
+            errorMessage = "testplan is empty for ScheduleId=" + schedulerDto.getScheduleId();
+            isErrorOccurred = true;
+            stopWatch.stop();
+
+            var updateTestPlanResultStatus = getUpdateTestPlanResultAsCompletedModel(
+                    true,
+                    errorMessage,
+                    stopWatch.getTime(),
+                    startedOn,
+                    completedOn);
+            updateTestPlanResultStatus(schedulerDto.getScheduleId(), testPlanResultModel.getId(), updateTestPlanResultStatus);
         }
 
-        OffsetDateTime startedOn = OffsetDateTime.now();
-        StopWatch stopWatch = StopWatch.createStarted();
-        Boolean isErrorOccurred = false;
-        String errorMessage = null;
+        var scheduleTestPlanModel = schedulerDto.getScheduleDetail().getScheduleTestPlanModel();
+
         Collections.sort(scheduleTestPlanModel.getScheduledTestCaseModel(), (a1, a2) -> (int) (a1.getOrder() - a2.getOrder()));
 
         try {
-            testCaseExecutor.execute(schedulerDto, scheduleTestPlanModel);
+            testCaseExecutor.execute(schedulerDto, testPlanResultModel);
+        } catch (SchedulerException schedulerException) {
+            errorMessage = "error in subsequent  process";
+            isErrorOccurred = true;
         } catch (Exception exception) {
-            stopWatch.stop();
             isErrorOccurred = true;
             errorMessage = exception.getMessage();
         }
-        if (!isErrorOccurred) {
-            stopWatch.stop();
-        }
-        OffsetDateTime completedOn = OffsetDateTime.now();
-        if (testPlanResultModel == null) {
-            errorMessage = " not able to find TestPlanResult for ScheduleId=" + schedulerDto.getScheduleId() + " TestPlanId=" + scheduleTestPlanModel.getId();
-            isErrorOccurred = true;
-        }
+
+        completedOn = OffsetDateTime.now();
         var updateTestPlanResultStatus = getUpdateTestPlanResultAsCompletedModel(
                 isErrorOccurred,
                 errorMessage,
@@ -67,9 +79,14 @@ public class TestPlanExecutorImpl implements TestPlanExecutor {
                 startedOn,
                 completedOn);
         updateTestPlanResultStatus(schedulerDto.getScheduleId(), testPlanResultModel.getId(), updateTestPlanResultStatus);
+
+        if (StringUtils.isNotEmpty(errorMessage)) {
+            throw new SchedulerException("", ExceptionStatus.Error);
+        }
     }
 
-    private UpdateTestPlanResultAsCompletedModel getUpdateTestPlanResultAsCompletedModel(Boolean isErrorOccurred, String errorMessage,
+    private UpdateTestPlanResultAsCompletedModel getUpdateTestPlanResultAsCompletedModel(Boolean isErrorOccurred,
+                                                                                         String errorMessage,
                                                                                          Long totalDuration,
                                                                                          OffsetDateTime startedOn,
                                                                                          OffsetDateTime completedOn) {

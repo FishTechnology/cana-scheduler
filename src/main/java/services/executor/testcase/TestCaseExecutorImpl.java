@@ -6,12 +6,15 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import services.commons.CanaSchedulerConstants;
 import services.commons.CanaSchedulerUtility;
+import services.commons.exceptions.ExceptionStatus;
+import services.commons.exceptions.SchedulerException;
 import services.executor.action.ActionExecutor;
 import services.executor.dtos.SchedulerDto;
 import services.restclients.result.testcaseresult.TestCaseResultServiceRestClient;
 import services.restclients.result.testcaseresult.models.TestCaseResultModel;
 import services.restclients.result.testcaseresult.models.UpdateTestCaseResultAsCompletedModel;
 import services.restclients.result.testcaseresult.models.enums.TestCaseResultStatusDao;
+import services.restclients.result.testplanresult.models.TestPlanResultModel;
 import services.restclients.schedule.models.ScheduleTestPlanModel;
 import services.restclients.schedule.models.ScheduledTestCaseModel;
 
@@ -32,8 +35,9 @@ public class TestCaseExecutorImpl implements TestCaseExecutor {
     TestCaseResultServiceRestClient testCaseResultServiceRestClient;
 
     @Override
-    public void execute(SchedulerDto schedulerDto, ScheduleTestPlanModel scheduleTestPlanModel) throws Exception {
-        var testCaseResultModels = testCaseResultServiceRestClient.getTestCaseResultByPlanResultId(scheduleTestPlanModel.getId());
+    public void execute(SchedulerDto schedulerDto, TestPlanResultModel testPlanResultModel) throws Exception {
+        var scheduleTestPlanModel = schedulerDto.getScheduleDetail().getScheduleTestPlanModel();
+        var testCaseResultModels = testCaseResultServiceRestClient.getTestCaseResultByPlanResultId(testPlanResultModel.getId());
         if (CollectionUtils.isEmpty(testCaseResultModels)) {
             throw new Exception("TestCaseResults is null for TestPlanResult Id =" + scheduleTestPlanModel.getId());
         }
@@ -44,9 +48,20 @@ public class TestCaseExecutorImpl implements TestCaseExecutor {
             StopWatch stopWatch = StopWatch.createStarted();
             String errorMessage = null;
             OffsetDateTime startedOn = OffsetDateTime.now();
+            TestCaseResultModel testCaseResultModel = null;
             try {
+                testCaseResultModel = this.getTestCaseResultModel(scheduledTestCaseModel, testCaseResultModels);
                 Collections.sort(scheduledTestCaseModel.getScheduledActionDetails(), (a1, a2) -> (int) (a1.getOrder() - a2.getOrder()));
-                actionExecutor.execute(schedulerDto, scheduledTestCaseModel);
+
+                actionExecutor.execute(schedulerDto, scheduledTestCaseModel, testCaseResultModel);
+
+            } catch (SchedulerException schedulerException) {
+                errorMessage = "error in subsequent process";
+
+                if (StringUtils.isNotEmpty(schedulerException.errorMessage)) {
+                    errorMessage = schedulerException.errorMessage;
+                }
+
             } catch (Exception exception) {
                 errorMessage = CanaSchedulerUtility.getMessage(exception);
             }
@@ -55,23 +70,21 @@ public class TestCaseExecutorImpl implements TestCaseExecutor {
             OffsetDateTime completedOn = OffsetDateTime.now();
             updateTestCaseResultStatus(
                     scheduleTestPlanModel,
-                    scheduledTestCaseModel,
-                    testCaseResultModels,
+                    testCaseResultModel,
                     stopWatch.getTime(),
                     errorMessage,
                     startedOn,
                     completedOn);
+
+            if (StringUtils.isNotEmpty(errorMessage)) {
+                throw new SchedulerException("", ExceptionStatus.Error);
+            }
         }
     }
 
-    private void updateTestCaseResultStatus(ScheduleTestPlanModel scheduleTestPlanModel,
-                                            ScheduledTestCaseModel scheduledTestCaseModel,
-                                            List<TestCaseResultModel> testCaseResultModels,
-                                            long duration,
-                                            String errorMessage,
-                                            OffsetDateTime startedOn,
-                                            OffsetDateTime completedOn) throws Exception {
-
+    private TestCaseResultModel getTestCaseResultModel(
+            ScheduledTestCaseModel scheduledTestCaseModel,
+            List<TestCaseResultModel> testCaseResultModels) throws Exception {
         var filteredRes = testCaseResultModels
                 .stream()
                 .filter(x -> x.getTestCaseId() == scheduledTestCaseModel.getId())
@@ -81,7 +94,15 @@ public class TestCaseExecutorImpl implements TestCaseExecutor {
             throw new Exception("TestCaseResult is null for TestCase Id =" + scheduledTestCaseModel.getId());
         }
 
-        TestCaseResultModel testCaseResultModel = filteredRes.get();
+        return filteredRes.get();
+    }
+
+    private void updateTestCaseResultStatus(ScheduleTestPlanModel scheduleTestPlanModel,
+                                            TestCaseResultModel testCaseResultModel,
+                                            long duration,
+                                            String errorMessage,
+                                            OffsetDateTime startedOn,
+                                            OffsetDateTime completedOn) throws Exception {
 
         UpdateTestCaseResultAsCompletedModel updateTestCaseResultAsCompletedModel = new UpdateTestCaseResultAsCompletedModel();
         updateTestCaseResultAsCompletedModel.setStatus(TestCaseResultStatusDao.COMPLETED.name());
