@@ -1,5 +1,5 @@
 ####
-# This Dockerfile is used in order to build a distroless container that runs the Quarkus application in native (no JVM) mode
+# This docker-compose-v3.yml is used in order to build a distroless container that runs the Quarkus application in native (no JVM) mode
 #
 # Before building the container image run:
 #
@@ -7,7 +7,7 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native-distroless -t quarkus/cana.codelessautomation.scheduler .
+# docker build -f src/main/docker/docker-compose-v3.yml.native-distroless -t quarkus/cana.codelessautomation.scheduler .
 #
 # Then run the container using:
 #

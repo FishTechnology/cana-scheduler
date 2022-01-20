@@ -31,7 +31,7 @@ public class ScheduledExecutorImpl implements ScheduledExecutor {
     @Override
     public void executeSchedule() {
         SchedulerDto schedulerDto = new SchedulerDto();
-        schedulerDto.setScheduleId(39L);
+        schedulerDto.setScheduleId(42L);
         String errorMessage = null;
         StopWatch stopWatch = StopWatch.createStarted();
         try {
@@ -88,10 +88,10 @@ public class ScheduledExecutorImpl implements ScheduledExecutor {
     }
 
     private List<ErrorMessageModel> validateSchedule(SchedulerDto schedulerDto) {
-        var scheduleTestPlanModel = schedulerDto.getScheduleDetail().getScheduleTestPlanModel();
-        if (Objects.isNull(scheduleTestPlanModel)) {
-            return CanaSchedulerUtility.getErrorMessageModels("Schedule Test Plan Model is null for scheduleId=" + schedulerDto.getScheduleId());
-        }
+//        var scheduleTestPlanModel = null;//schedulerDto.getScheduleDetail().getScheduleTestPlanModel();
+//        if (Objects.isNull(scheduleTestPlanModel)) {
+//            return CanaSchedulerUtility.getErrorMessageModels("Schedule Test Plan Model is null for scheduleId=" + schedulerDto.getScheduleId());
+//        }
 
         if (Objects.isNull(
                 schedulerDto

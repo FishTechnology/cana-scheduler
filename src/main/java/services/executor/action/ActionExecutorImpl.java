@@ -1,5 +1,6 @@
 package services.executor.action;
 
+import cana.codelessautomation.scheduler.v2.services.action.types.Action;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -7,7 +8,6 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import services.commons.CanaSchedulerUtility;
 import services.commons.exceptions.SchedulerException;
 import services.executor.action.mappers.ActionExecutorMapper;
-import services.executor.action.types.Action;
 import services.executor.dtos.SchedulerDto;
 import services.restclients.result.actionresult.ActionResultServiceRestClient;
 import services.restclients.result.actionresult.models.ActionResultModel;

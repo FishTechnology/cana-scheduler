@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>cana.codelessautomation.scheduler</groupId>
     <artifactId>cana.codelessautomation.scheduler</artifactId>
@@ -112,7 +110,7 @@
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
-            <version>6.0.3</version>
+            <version>6.1.2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.browserup/browserup-proxy-core -->
         <dependency>
@@ -130,7 +128,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-remote-driver</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
@@ -141,7 +139,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-api</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.1</version>
         </dependency>
     </dependencies>
     <build>
