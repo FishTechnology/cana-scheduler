@@ -1,17 +1,17 @@
 package cana.codelessautomation.scheduler.v2.services.action.types.database;
 
+import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
+import cana.codelessautomation.scheduler.v2.services.action.models.ActionTypeDao;
 import cana.codelessautomation.scheduler.v2.services.action.types.Action;
-import services.executor.dtos.SchedulerDto;
-import services.restclients.action.ActionTypeDao;
-import services.restclients.schedule.models.ScheduledActionDetailModel;
-import services.restclients.schedule.models.ScheduledTestCaseModel;
+import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
+import services.restclients.testcase.TestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DataActionImpl implements Action {
     @Override
-    public void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) {
+    public void execute(ScheduledTestPlanDto scheduledTestPlanDto, TestCaseModel testCaseModel, ActionDetailModel actionDetailModel) {
 
     }
 

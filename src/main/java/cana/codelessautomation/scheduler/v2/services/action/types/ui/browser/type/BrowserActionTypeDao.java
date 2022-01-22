@@ -4,5 +4,6 @@ public enum BrowserActionTypeDao {
     OPEN,
     CLOSE,
     TITLE,
-    URL
+    URL,
+    NAVIGATION,
 }

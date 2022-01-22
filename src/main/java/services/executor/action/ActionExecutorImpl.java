@@ -56,14 +56,7 @@ public class ActionExecutorImpl implements ActionExecutor {
             for (Action action : actionInstance) {
                 if (action.actionName() == scheduledActionDetailModel.getType()) {
                     try {
-                        action.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel);
-                    } catch (SchedulerException schedulerException) {
-                        errorMessage = "error in subsequent process";
-
-                        if (StringUtils.isNotEmpty(schedulerException.errorMessage)) {
-                            errorMessage = schedulerException.errorMessage;
-                        }
-
+                     //   action.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel);
                     } catch (Exception exception) {
                         errorMessage = CanaSchedulerUtility.getMessage(exception);
                         break;

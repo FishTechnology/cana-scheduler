@@ -25,7 +25,7 @@ public class TestCaseServiceImpl implements TestCaseService {
     public void executeTestCase(ScheduledTestPlanDto scheduledTestPlanDto) {
         var testCaseModels = (List<TestCaseModel>) null;
         try {
-            testCaseModels = testCaseServiceRestClient.getTestCaseByTestPlanId(scheduledTestPlanDto.getScheduleModel().getApplicationId(), scheduledTestPlanDto.getScheduleModel().getTestPlanId());
+            testCaseModels = testCaseServiceRestClient.getTestCaseByTestPlanId(scheduledTestPlanDto.getScheduleDetail().getApplicationId(), scheduledTestPlanDto.getScheduleDetail().getTestPlanId());
         } catch (Exception ex) {
             var name = ex.getClass().getSimpleName();
         }
@@ -35,7 +35,7 @@ public class TestCaseServiceImpl implements TestCaseService {
         }
 
         for (TestCaseModel testCaseModel : testCaseModels) {
-            scheduledTestPlanDto.setTestCaseModel(testCaseModel);
+            scheduledTestPlanDto.setTestCaseDetail(testCaseModel);
             actionService.execute(scheduledTestPlanDto);
         }
     }

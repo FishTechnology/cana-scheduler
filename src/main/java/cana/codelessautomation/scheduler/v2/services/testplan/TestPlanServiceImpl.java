@@ -24,16 +24,16 @@ public class TestPlanServiceImpl implements TestPlanService {
     public void executeTestPlan(ScheduledTestPlanDto scheduledTestPlanDto) {
         var testPlanModel = (TestPlanModel) null;
         try {
-            testPlanModel = testPlanServiceRestClient.getTestPlanById(scheduledTestPlanDto.getScheduleModel().getApplicationId(), scheduledTestPlanDto.getScheduleModel().getTestPlanId());
+            testPlanModel = testPlanServiceRestClient.getTestPlanById(scheduledTestPlanDto.getScheduleDetail().getApplicationId(), scheduledTestPlanDto.getScheduleDetail().getTestPlanId());
         } catch (Exception ex) {
-            var name = ex.getClass().getSimpleName();
+
         }
 
         if (Objects.isNull(testPlanModel)) {
             return;
         }
 
-        scheduledTestPlanDto.setTestPlanModel(testPlanModel);
+        scheduledTestPlanDto.setTestPlanDetail(testPlanModel);
 
         testCaseService.executeTestCase(scheduledTestPlanDto);
     }

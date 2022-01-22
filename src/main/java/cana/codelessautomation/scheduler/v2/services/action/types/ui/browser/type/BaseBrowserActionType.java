@@ -1,16 +1,16 @@
 package cana.codelessautomation.scheduler.v2.services.action.types.ui.browser.type;
 
+import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import services.restclients.schedule.models.ConditionType;
-import services.restclients.schedule.models.ScheduledActionDetailModel;
 import utilities.ConditionEvaluate;
 
 import static com.codeborne.selenide.Selenide.title;
 import static com.codeborne.selenide.WebDriverRunner.url;
 
 public class BaseBrowserActionType {
-    void assertUtl(ScheduledActionDetailModel scheduledActionDetailModel) throws Exception {
+    void assertUtl(ActionDetailModel scheduledActionDetailModel) throws Exception {
         var browserUrl = url();
         var conditionType = ConditionType.EQUAL;
         if (!StringUtils.isEmpty(scheduledActionDetailModel.getConditionType())) {
@@ -23,7 +23,7 @@ public class BaseBrowserActionType {
         throw new Exception(message);
     }
 
-    void assertTitle(ScheduledActionDetailModel scheduledActionDetailModel) throws Exception {
+    void assertTitle(ActionDetailModel scheduledActionDetailModel) throws Exception {
         var title = title();
         var conditionType = ConditionType.EQUAL;
         if (!StringUtils.isEmpty(scheduledActionDetailModel.getConditionType())) {

@@ -1,5 +1,7 @@
 package cana.codelessautomation.scheduler.v2.services.action.types.ui.browser.type;
 
+import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
+import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
 import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
@@ -7,9 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import services.commons.CanaSchedulerUtility;
-import services.executor.dtos.SchedulerDto;
-import services.restclients.schedule.models.ScheduledActionDetailModel;
-import services.restclients.schedule.models.ScheduledTestCaseModel;
+import services.restclients.testcase.TestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.net.URL;
@@ -25,9 +25,9 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
 
 
     @Override
-    public void execute(SchedulerDto schedulerDto,
-                        ScheduledTestCaseModel scheduledTestCaseModel,
-                        ScheduledActionDetailModel scheduledActionDetailModel) throws Exception {
+    public void execute(ScheduledTestPlanDto schedulerDto,
+                        TestCaseModel scheduledTestCaseModel,
+                        ActionDetailModel scheduledActionDetailModel) throws Exception {
 
 
         if (scheduledActionDetailModel.getIsAssertVerification()) {
@@ -38,7 +38,7 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
                 assertTitle(scheduledActionDetailModel);
             }
         } else {
-            if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.OPEN.name())) {
+            if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.NAVIGATION.name())) {
                 setup(schedulerDto, scheduledActionDetailModel);
             } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.CLOSE.name())) {
                 tearDown();
@@ -51,7 +51,7 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
         return BrowserType.GOOGLE_CHROME;
     }
 
-    private void setup(SchedulerDto schedulerDto, ScheduledActionDetailModel scheduledActionDetailModel) throws Exception {
+    private void setup(ScheduledTestPlanDto schedulerDto, ActionDetailModel scheduledActionDetailModel) throws Exception {
 //        BrowserWebDriverContainer<?> chrome = new BrowserWebDriverContainer<>()
 //                .withCapabilities(new ChromeOptions())
 //                .withRecordingMode(BrowserWebDriverContainer.VncRecordingMode.RECORD_FAILING, new File("./build/"));
@@ -60,7 +60,7 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
 //        firefoxOptions.merge(capabilities);
         RemoteWebDriver driver = null;
         ChromeOptions chromeOptions = new ChromeOptions();
-        if (schedulerDto.getScheduleDetail().getScheduleIterationModel().getIsRecordVideoEnabled()) {
+        if (schedulerDto.getScheduleDetail().getScheduleIteration().getIsRecordVideoEnabled()) {
             chromeOptions.setCapability("se:recordVideo", true);
         }
 

@@ -1,10 +1,10 @@
 package cana.codelessautomation.scheduler.v2.services.action.types.ui;
 
-import services.executor.dtos.SchedulerDto;
-import services.restclients.schedule.models.ScheduledActionDetailModel;
-import services.restclients.schedule.models.ScheduledTestCaseModel;
+import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
+import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
+import services.restclients.testcase.TestCaseModel;
 
 public interface UIAction {
-    void execute(SchedulerDto schedulerDto, ScheduledTestCaseModel scheduledTestCaseModel, ScheduledActionDetailModel scheduledActionDetailModel) throws Exception;
+    void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel) throws Exception;
     UIActionType actionName();
 }
