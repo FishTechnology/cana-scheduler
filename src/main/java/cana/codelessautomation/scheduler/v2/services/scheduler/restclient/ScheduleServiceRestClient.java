@@ -6,8 +6,8 @@ import services.restclients.commons.ErrorMessageModel;
 import services.restclients.schedule.models.ScheduleModel;
 import services.restclients.schedule.models.UpdateScheduleStatusModel;
 
-import javax.validation.Valid;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import java.util.List;
@@ -24,7 +24,11 @@ public interface ScheduleServiceRestClient {
     @Path("/schedules/scheduleToExecute")
     ScheduleModel getScheduleToExecute();
 
+    @POST
+    @Path("/schedules/{scheduleId}/copy")
+    List<ErrorMessageModel> copyTestPlanDetail(@PathParam Long scheduleId);
+
     @PUT
     @Path("/schedules/{scheduleId}/status")
-    List<ErrorMessageModel> updateScheduleStatus(@Valid @PathParam Long scheduleId, @Valid UpdateScheduleStatusModel updateScheduleStatusModel);
+    List<ErrorMessageModel> updateScheduleStatus(@PathParam Long scheduleId, UpdateScheduleStatusModel updateScheduleStatusModel);
 }

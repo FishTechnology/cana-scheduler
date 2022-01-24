@@ -85,6 +85,17 @@ public class SchedulerServiceImpl implements SchedulerService {
             return;
         }
 
+        try {
+            var errorMessage = scheduleServiceRestClient.copyTestPlanDetail(scheduleModel.getId());
+            if (CollectionUtils.isNotEmpty(errorMessage)) {
+                //TODO: log error message
+                return;
+            }
+        } catch (Exception exception) {  //TODO: log error message
+
+        }
+
+
         var startedOn = System.nanoTime();
 
         var isErrorOccurred = false;
