@@ -1,6 +1,7 @@
 package cana.codelessautomation.scheduler.v2.services.scheduler;
 
 import cana.codelessautomation.scheduler.v2.services.config.restclient.ConfigServiceRestClient;
+import cana.codelessautomation.scheduler.v2.services.scheduler.mappers.ScheduleStatusDao;
 import cana.codelessautomation.scheduler.v2.services.scheduler.mappers.SchedulerServiceMapper;
 import cana.codelessautomation.scheduler.v2.services.scheduler.restclient.ScheduleServiceRestClient;
 import cana.codelessautomation.scheduler.v2.services.system.models.GetSystemConfigsByAppIdModel;
@@ -11,6 +12,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import services.commons.CanaSchedulerUtility;
+import services.restclients.commons.ErrorMessageModel;
 import services.restclients.schedule.models.ScheduleModel;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -40,7 +43,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     @Override
     public void executeSchedule() {
-        var scheduleModel = (ScheduleModel) null;
+        var scheduleModels = (List<ScheduleModel>) null;
         var getSystemConfigsByAppIdModel = (GetSystemConfigsByAppIdModel) null;
 
         try {
@@ -51,16 +54,15 @@ public class SchedulerServiceImpl implements SchedulerService {
 
 
         try {
-            scheduleModel = scheduleServiceRestClient.getRunningSchedule();
+            scheduleModels = scheduleServiceRestClient.getRunningSchedules();
         } catch (Exception ex) {
-
         }
 
-        if (!Objects.isNull(scheduleModel) && !isParallelExecutionAllowed(getSystemConfigsByAppIdModel)) {
+        if (CollectionUtils.isNotEmpty(scheduleModels) && !isParallelExecutionAllowed(getSystemConfigsByAppIdModel)) {
             return;
         }
 
-        scheduleModel = null;
+        var scheduleModel = (ScheduleModel) null;
 
         try {
             scheduleModel = scheduleServiceRestClient.getScheduleToExecute();
@@ -72,10 +74,50 @@ public class SchedulerServiceImpl implements SchedulerService {
             return;
         }
 
-        var configsDetails = configServiceRestClient.getConfigsByAppId(scheduleModel.getApplicationId());
+        try {
+            var errorMessage = updateScheduleStatus(scheduleModel.getId(), ScheduleStatusDao.INPROGRESS, null, null);
+            if (CollectionUtils.isNotEmpty(errorMessage)) {
+                //TODO: log error message
+                return;
+            }
 
-        var scheduledTestPlanDto = schedulerServiceMapper.mapScheduleTestPlanDto(scheduleModel, getSystemConfigsByAppIdModel.getSystemConfigs(), configsDetails);
-        testPlanService.executeTestPlan(scheduledTestPlanDto);
+        } catch (Exception ex) {
+            return;
+        }
+
+        var startedOn = System.nanoTime();
+
+        var isErrorOccurred = false;
+        String scheduleErrorMessage = null;
+        try {
+            var configsDetails = configServiceRestClient.getConfigsByAppId(scheduleModel.getApplicationId());
+
+            var scheduledTestPlanDto = schedulerServiceMapper.mapScheduleTestPlanDto(scheduleModel, getSystemConfigsByAppIdModel.getSystemConfigs(), configsDetails);
+            testPlanService.executeTestPlan(scheduledTestPlanDto);
+
+        } catch (Exception ex) {
+            isErrorOccurred = true;
+            scheduleErrorMessage = CanaSchedulerUtility.getMessage(ex);
+        }
+
+        var endedOn = System.nanoTime();
+
+        ScheduleStatusDao scheduleStatus = ScheduleStatusDao.COMPLETED;
+        if (isErrorOccurred) {
+            scheduleStatus = ScheduleStatusDao.ERROR;
+        }
+
+        try {
+            var errorMessage = updateScheduleStatus(scheduleModel.getId(), scheduleStatus, scheduleErrorMessage, String.valueOf(endedOn - startedOn));
+            if (CollectionUtils.isNotEmpty(errorMessage)) {
+                //TODO: log error message
+                return;
+            }
+
+        } catch (Exception ex) {
+            //TODO: log error message
+            return;
+        }
     }
 
     private boolean isParallelExecutionAllowed(GetSystemConfigsByAppIdModel getSystemConfigsByAppIdModel) {
@@ -105,5 +147,10 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     private SystemConfigModel getSystemConfigValue(List<SystemConfigModel> systemConfigs, String systemConfigKey) {
         return systemConfigs.stream().filter(x -> StringUtils.equalsAnyIgnoreCase(x.getKey(), systemConfigKey)).findFirst().get();
+    }
+
+    private List<ErrorMessageModel> updateScheduleStatus(Long scheduleId, ScheduleStatusDao scheduleStatusDao, String errorMessage, String totalDuration) {
+        var updateScheduleStatusModel = schedulerServiceMapper.mapUpdateScheduleStatusModel(scheduleStatusDao, errorMessage, totalDuration);
+        return scheduleServiceRestClient.updateScheduleStatus(scheduleId, updateScheduleStatusModel);
     }
 }
