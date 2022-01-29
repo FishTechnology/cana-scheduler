@@ -4,7 +4,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import services.commons.CanaSchedulerUtility;
+import cana.codelessautomation.scheduler.v2.commons.CanaSchedulerUtility;
 import services.executor.dtos.SchedulerDto;
 import services.executor.testplan.TestPlanExecutor;
 import services.restclients.commons.ErrorMessageModel;

@@ -1,23 +1,29 @@
 package cana.codelessautomation.scheduler.v2.services.action.types.ui.browser.type;
 
+import cana.codelessautomation.scheduler.v2.commons.CanaSchedulerUtility;
 import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
+import cana.codelessautomation.scheduler.v2.services.token.TokenService;
+import cana.codelessautomation.scheduler.v2.services.token.dtos.ScopeLevel;
 import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testcontainers.containers.BrowserWebDriverContainer;
-import services.commons.CanaSchedulerUtility;
 import services.restclients.testcase.TestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.net.URL;
 
 import static com.codeborne.selenide.Selenide.open;
 
 @ApplicationScoped
 public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeAction {
+
+    @Inject
+    TokenService tokenService;
 
     @Rule
     public BrowserWebDriverContainer chrome = new BrowserWebDriverContainer()
@@ -69,7 +75,13 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
             WebDriverRunner.setWebDriver(driver);
 
             if (!StringUtils.isEmpty(scheduledActionDetailModel.getBrowserValue())) {
-                open(scheduledActionDetailModel.getBrowserValue());
+                var tokenValue = scheduledActionDetailModel.getBrowserValue();
+                if (tokenService.hasToken(scheduledActionDetailModel.getBrowserValue())) {
+                    tokenValue = tokenService.replaceToken(schedulerDto.getScheduleDetail().getApplicationId(),
+                            scheduledActionDetailModel.getBrowserValue(),
+                            ScopeLevel.ACTION);
+                }
+                open(tokenValue);
             }
         } catch (Exception exception) {
             throw new Exception("Browser setup exception=" + CanaSchedulerUtility.getMessage(exception));

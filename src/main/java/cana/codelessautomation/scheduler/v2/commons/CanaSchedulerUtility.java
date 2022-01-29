@@ -1,4 +1,4 @@
-package services.commons;
+package cana.codelessautomation.scheduler.v2.commons;
 
 import org.apache.commons.lang3.StringUtils;
 import services.restclients.commons.ErrorMessageModel;
