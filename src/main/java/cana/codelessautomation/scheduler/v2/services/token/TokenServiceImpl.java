@@ -85,8 +85,8 @@ public class TokenServiceImpl implements TokenService {
 
     public String getTokenName(String value) {
         var startIndex = StringUtils.indexOf(value, "{{");
-        var partialString = StringUtils.substring(value, startIndex);
+        var partialString = StringUtils.substring(value, startIndex + 2);
         var endIndex = StringUtils.indexOf(partialString, "}}");
-        return StringUtils.substring(partialString, endIndex);
+        return StringUtils.substring(partialString, 0, endIndex);
     }
 }
