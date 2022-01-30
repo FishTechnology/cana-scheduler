@@ -20,10 +20,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Boolean hasToken(String browserValue) {
-        if (!(StringUtils.indexOf(browserValue, "{{") < 0 && StringUtils.indexOf(browserValue, "}}") < 0)) {
-            return false;
-        }
-        return true;
+        return StringUtils.indexOf(browserValue, "{{") >= 0 && StringUtils.indexOf(browserValue, "}}") >= 0;
     }
 
     @Override
