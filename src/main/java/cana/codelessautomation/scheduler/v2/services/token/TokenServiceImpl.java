@@ -40,6 +40,14 @@ public class TokenServiceImpl implements TokenService {
             return tokenValue;
         }
 
+        var environmentTokenValue = getTokenValue(configs, ConfigTypeDao.ENVIRONMENT_VARIABLE, tokenName);
+        if (StringUtils.isNotEmpty(environmentTokenValue)) {
+            tokenValue = environmentTokenValue;
+        }
+        if (scopeLevel == ScopeLevel.TEST_PLAN) {
+            return tokenValue;
+        }
+
         var testPlanTokenValue = getTokenValue(configs, ConfigTypeDao.TEST_PLAN, tokenName);
         if (StringUtils.isNotEmpty(testPlanTokenValue)) {
             tokenValue = testPlanTokenValue;
