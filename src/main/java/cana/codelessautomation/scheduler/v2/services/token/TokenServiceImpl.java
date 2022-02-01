@@ -24,11 +24,21 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public String getTokenValue(Long appId, String value, ScopeLevel scopeLevel) {
+        return processToken(appId, value, scopeLevel);
+    }
+
+    @Override
     public String replaceToken(Long appId, String value, ScopeLevel scopeLevel) {
         if (!hasToken(value)) {
             return value;
         }
         var tokenName = getTokenName(value);
+        return processToken(appId, tokenName, scopeLevel);
+    }
+
+    @Override
+    public String processToken(Long appId, String tokenName, ScopeLevel scopeLevel) {
         var tokenValue = "";
 
         var configs = configServiceRestClient.getConfigsByAppId(appId);
@@ -68,6 +78,7 @@ public class TokenServiceImpl implements TokenService {
         return tokenValue;
     }
 
+    @Override
     public String getTokenValue(List<ConfigModel> configModels, ConfigTypeDao configType, String tokenName) {
         var tokenValue = "";
         var globalConfigs = configModels.stream().filter(config -> StringUtils.equalsAnyIgnoreCase(config.getType(), configType.name())).collect(Collectors.toList());
@@ -83,6 +94,7 @@ public class TokenServiceImpl implements TokenService {
         return tokenValue;
     }
 
+    @Override
     public String getTokenName(String value) {
         var startIndex = StringUtils.indexOf(value, "{{");
         var partialString = StringUtils.substring(value, startIndex + 2);

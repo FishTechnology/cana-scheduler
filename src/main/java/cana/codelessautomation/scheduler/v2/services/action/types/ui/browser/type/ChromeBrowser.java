@@ -6,6 +6,7 @@ import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledT
 import cana.codelessautomation.scheduler.v2.services.token.TokenService;
 import cana.codelessautomation.scheduler.v2.services.token.dtos.ScopeLevel;
 import com.codeborne.selenide.WebDriverRunner;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Rule;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -66,6 +67,11 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
 //        firefoxOptions.merge(capabilities);
         RemoteWebDriver driver = null;
         ChromeOptions chromeOptions = new ChromeOptions();
+        var accept_untrusted_certs = tokenService.getTokenValue(schedulerDto.getScheduleDetail().getApplicationId(), "ACCEPT_UNTRUSTED_CERTS", ScopeLevel.ACTION);
+        if (StringUtils.isNotEmpty(accept_untrusted_certs) && BooleanUtils.toBoolean(accept_untrusted_certs)) {
+            chromeOptions.setAcceptInsecureCerts(true);
+        }
+
         if (schedulerDto.getScheduleDetail().getScheduleIteration().getIsRecordVideoEnabled()) {
             chromeOptions.setCapability("se:recordVideo", true);
         }
