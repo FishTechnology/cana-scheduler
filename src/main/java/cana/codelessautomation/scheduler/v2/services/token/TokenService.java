@@ -1,5 +1,6 @@
 package cana.codelessautomation.scheduler.v2.services.token;
 
+import cana.codelessautomation.scheduler.v2.services.config.models.ConfigKeyValueModel;
 import cana.codelessautomation.scheduler.v2.services.config.models.ConfigModel;
 import cana.codelessautomation.scheduler.v2.services.token.daos.ConfigTypeDao;
 import cana.codelessautomation.scheduler.v2.services.token.dtos.ScopeLevel;
@@ -9,13 +10,13 @@ import java.util.List;
 public interface TokenService {
     Boolean hasToken(String browserValue);
 
-    String getTokenValue(Long appId, String value, ScopeLevel scopeLevel);
+    ConfigKeyValueModel getToken(Long appId, String value, ScopeLevel scopeLevel, boolean isApplicationVariable);
 
     String replaceToken(Long appId, String value, ScopeLevel scopeLevel);
 
-    String processToken(Long appId, String tokenName, ScopeLevel scopeLevel);
+    ConfigKeyValueModel processToken(Long appId, String tokenName, ScopeLevel scopeLevel, boolean isApplicationVariable);
 
-    String getTokenValue(List<ConfigModel> configModels, ConfigTypeDao configType, String tokenName);
+    ConfigKeyValueModel getToken(List<ConfigModel> configModels, ConfigTypeDao configType, String tokenName, boolean isApplicationVariable);
 
     String getTokenName(String value);
 }

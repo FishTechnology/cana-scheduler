@@ -2,6 +2,7 @@ package cana.codelessautomation.scheduler.v2.services.action.types.ui.browser.ty
 
 import cana.codelessautomation.scheduler.v2.commons.CanaSchedulerUtility;
 import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
+import cana.codelessautomation.scheduler.v2.services.config.dtos.SystemVariableEnum;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
 import cana.codelessautomation.scheduler.v2.services.token.TokenService;
 import cana.codelessautomation.scheduler.v2.services.token.dtos.ScopeLevel;
@@ -17,6 +18,7 @@ import services.restclients.testcase.TestCaseModel;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.net.URL;
+import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.open;
 
@@ -67,8 +69,12 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
 //        firefoxOptions.merge(capabilities);
         RemoteWebDriver driver = null;
         ChromeOptions chromeOptions = new ChromeOptions();
-        var accept_untrusted_certs = tokenService.getTokenValue(schedulerDto.getScheduleDetail().getApplicationId(), "ACCEPT_UNTRUSTED_CERTS", ScopeLevel.ACTION);
-        if (StringUtils.isNotEmpty(accept_untrusted_certs) && BooleanUtils.toBoolean(accept_untrusted_certs)) {
+        var acceptUntrustedCertsConfig = tokenService.getToken(
+                schedulerDto.getScheduleDetail().getApplicationId(),
+                SystemVariableEnum.ACCEPT_UNTRUSTED_CERTS.name(),
+                ScopeLevel.ACTION,
+                true);
+        if (!Objects.isNull(acceptUntrustedCertsConfig) && BooleanUtils.toBoolean(acceptUntrustedCertsConfig.getValue())) {
             chromeOptions.setAcceptInsecureCerts(true);
         }
 

@@ -13,4 +13,5 @@ public class ConfigKeyValueModel {
     private String content;
     private String comments;
     private Boolean isActive = false;
+    private Boolean isApplicationVariable;
 }
