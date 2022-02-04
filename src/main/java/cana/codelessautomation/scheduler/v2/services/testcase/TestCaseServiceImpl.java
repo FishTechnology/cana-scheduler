@@ -8,8 +8,10 @@ import services.restclients.testcase.TestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class TestCaseServiceImpl implements TestCaseService {
@@ -27,14 +29,20 @@ public class TestCaseServiceImpl implements TestCaseService {
         try {
             testCaseModels = testCaseServiceRestClient.getTestCaseByTestPlanId(scheduledTestPlanDto.getScheduleDetail().getApplicationId(), scheduledTestPlanDto.getScheduleDetail().getTestPlanId());
         } catch (Exception ex) {
-            var name = ex.getClass().getSimpleName();
+
         }
 
         if (Objects.isNull(testCaseModels)) {
             return;
         }
 
-        for (TestCaseModel testCaseModel : testCaseModels) {
+        var sortedTestCases = testCaseModels
+                .stream()
+                .sorted(Comparator.comparing(TestCaseModel::getExecutionOrder))
+                .collect(Collectors.toList());
+
+
+        for (TestCaseModel testCaseModel : sortedTestCases) {
             scheduledTestPlanDto.setTestCaseDetail(testCaseModel);
             actionService.execute(scheduledTestPlanDto);
         }

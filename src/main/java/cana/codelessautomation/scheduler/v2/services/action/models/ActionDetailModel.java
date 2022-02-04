@@ -24,5 +24,6 @@ public class ActionDetailModel {
     private Boolean isActive;
     private Boolean isAssertVerification;
     private String conditionType;
+    private Boolean isOptional;
     private List<ActionOptionModel> actionOptionModels;
 }

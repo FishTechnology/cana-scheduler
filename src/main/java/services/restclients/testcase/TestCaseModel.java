@@ -23,4 +23,6 @@ public class TestCaseModel {
     private String modifiedBy;
     @JMap
     private Boolean isActive;
+    @JMap
+    private Long executionOrder;
 }

@@ -7,4 +7,5 @@ public class ActionOptionModel {
     private String optionType;
     private Long waitDuration;
     private Long order;
+    private String conditionType;
 }

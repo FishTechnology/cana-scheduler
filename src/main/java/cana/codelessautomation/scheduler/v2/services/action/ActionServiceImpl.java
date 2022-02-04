@@ -9,8 +9,10 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ActionServiceImpl implements ActionService {
@@ -28,14 +30,19 @@ public class ActionServiceImpl implements ActionService {
         try {
             actionModels = actionServiceRestClient.getActionsByTestCaseId(scheduledTestPlanDto.getTestCaseDetail().getId());
         } catch (Exception ex) {
-            var name = ex.getClass().getSimpleName();
+
         }
 
         if (Objects.isNull(actionModels)) {
             return;
         }
 
-        for (ActionDetailModel actionModel : actionModels) {
+        var sortedActions = actionModels
+                .stream()
+                .sorted(Comparator.comparing(ActionDetailModel::getOrder))
+                .collect(Collectors.toList());
+
+        for (ActionDetailModel actionModel : sortedActions) {
             for (Action action : actionInstance) {
                 if (action.actionName() == actionModel.getType()) {
                     try {
