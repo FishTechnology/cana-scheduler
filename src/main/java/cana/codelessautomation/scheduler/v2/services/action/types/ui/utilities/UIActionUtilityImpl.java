@@ -3,7 +3,6 @@ package cana.codelessautomation.scheduler.v2.services.action.types.ui.utilities;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.dtos.ControlIdTypeDto;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.dtos.ControlTypeAndIdDto;
 import cana.codelessautomation.scheduler.v2.services.token.TokenService;
-import cana.codelessautomation.scheduler.v2.services.token.dtos.ScopeLevel;
 import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +10,6 @@ import org.openqa.selenium.By;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +22,12 @@ public class UIActionUtilityImpl implements UIActionUtility {
     TokenService tokenService;
 
     private List<String> controlTypeIds = new ArrayList<>();
+
+    public UIActionUtilityImpl() {
+        controlTypeIds.add(ControlIdTypeDto.XPATH.name());
+        controlTypeIds.add(ControlIdTypeDto.ID.name());
+        controlTypeIds.add(ControlIdTypeDto.CSS.name());
+    }
 
     @Override
     public ControlTypeAndIdDto getIdAndValue(String controlKey) {
@@ -42,18 +46,13 @@ public class UIActionUtilityImpl implements UIActionUtility {
 
     @Override
     public SelenideElement getUIControl(Long applicationId, ControlTypeAndIdDto controlTypeAndIdDto) {
-        var tokenValue = controlTypeAndIdDto.getId();
-        if (this.tokenService.hasToken(controlTypeAndIdDto.getId())) {
-            tokenValue = this.tokenService.replaceToken(applicationId, tokenValue, ScopeLevel.ACTION);
-        }
-        // var tokenConfig = tokenService.
         switch (controlTypeAndIdDto.getControlIdType()) {
             case ID:
-                return $(By.id(tokenValue));
+                return $(By.id(controlTypeAndIdDto.getId()));
             case CSS:
-                return $(By.className(tokenValue));
+                return $(By.className(controlTypeAndIdDto.getId()));
             case XPATH:
-                return $(By.xpath(tokenValue));
+                return $(By.xpath(controlTypeAndIdDto.getId()));
         }
         return null;
     }

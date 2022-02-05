@@ -19,7 +19,7 @@ import static com.codeborne.selenide.Selenide.$;
 public class WaitForConditionUIBaseOption implements UIBaseOption {
     @Override
     public String Name() {
-        return UIOptionType.WaitFor.name();
+        return UIOptionType.WAIT_FOR.name();
     }
 
     @Override

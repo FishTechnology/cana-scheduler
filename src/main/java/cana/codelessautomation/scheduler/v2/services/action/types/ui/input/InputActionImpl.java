@@ -6,6 +6,8 @@ import cana.codelessautomation.scheduler.v2.services.action.types.ui.UIActionTyp
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.UIOption;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.utilities.UIActionUtility;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
+import cana.codelessautomation.scheduler.v2.services.token.TokenService;
+import cana.codelessautomation.scheduler.v2.services.token.dtos.ScopeLevel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import services.restclients.testcase.TestCaseModel;
@@ -22,9 +24,12 @@ public class InputActionImpl implements UIAction {
     @Inject
     UIActionUtility uiActionUtility;
 
+    @Inject
+    TokenService tokenService;
+
     @Override
     public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel) {
-        var controlTypeAndIdDto = uiActionUtility.getIdAndValue(scheduledActionDetailModel.getValue());
+        var controlTypeAndIdDto = uiActionUtility.getIdAndValue(scheduledActionDetailModel.getKey());
         var webElement = uiActionUtility.getUIControl(schedulerDto.getScheduleDetail().getApplicationId(), controlTypeAndIdDto);
 
         if (CollectionUtils.isNotEmpty(scheduledActionDetailModel.getActionOptionModels())) {
@@ -32,7 +37,13 @@ public class InputActionImpl implements UIAction {
         }
 
         if (StringUtils.isNotEmpty(scheduledActionDetailModel.getValue())) {
-            webElement.val(scheduledActionDetailModel.getValue());
+            var tokenValue = scheduledActionDetailModel.getValue();
+            if (tokenService.hasToken(tokenValue)) {
+                tokenValue = tokenService.replaceToken(schedulerDto.getScheduleDetail().getApplicationId(),
+                        tokenValue,
+                        ScopeLevel.ACTION);
+            }
+            webElement.val(tokenValue);
         }
     }
 
