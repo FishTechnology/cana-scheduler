@@ -2,6 +2,7 @@ package cana.codelessautomation.scheduler.v2.services.scheduler.models;
 
 import cana.codelessautomation.scheduler.v2.services.config.models.ConfigModel;
 import cana.codelessautomation.scheduler.v2.services.system.models.SystemConfigModel;
+import cana.codelessautomation.scheduler.v2.services.testcase.result.models.TestCaseResultModel;
 import cana.codelessautomation.scheduler.v2.services.testplan.result.models.TestPlanResultModel;
 import lombok.Data;
 import services.restclients.schedule.models.ScheduleModel;
@@ -19,4 +20,5 @@ public class ScheduledTestPlanDto {
     private List<SystemConfigModel> systemConfigs;
     private List<ConfigModel> applicationConfigs;
     private TestPlanResultModel testPlanResultModel;
+    private List<TestCaseResultModel> testCaseResultModels;
 }

@@ -12,7 +12,7 @@ import services.executor.dtos.SchedulerDto;
 import services.restclients.result.actionresult.ActionResultServiceRestClient;
 import services.restclients.result.actionresult.models.ActionResultModel;
 import services.restclients.result.actionresult.models.UpdateActionResultModel;
-import services.restclients.result.testcaseresult.models.TestCaseResultModel;
+import cana.codelessautomation.scheduler.v2.services.testcase.result.models.TestCaseResultModel;
 import services.restclients.schedule.models.ScheduledActionDetailModel;
 import services.restclients.schedule.models.ScheduledTestCaseModel;
 

@@ -84,7 +84,7 @@ public class TestPlanServiceImpl implements TestPlanService {
         }
 
         var endedOn = System.nanoTime();
-        var duration = endedOn - startedOn;
+        var duration = (endedOn - startedOn) / 1000000;
 
         try {
             var updateTestPlanResultAsCompletedModel = testPlanResultServiceMapper.mapEndUpdateTestPlanResultAsCompletedModel(TestPlanResultStatusDao.COMPLETED, duration, errorMessage);

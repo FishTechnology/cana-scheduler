@@ -1,15 +1,14 @@
 package services.executor.testcase;
 
+import cana.codelessautomation.scheduler.v2.services.testcase.result.models.TestCaseResultModel;
+import cana.codelessautomation.scheduler.v2.services.testcase.result.models.UpdateTestCaseResultModel;
 import cana.codelessautomation.scheduler.v2.services.testplan.result.models.TestPlanResultModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import services.commons.CanaSchedulerConstants;
 import services.executor.action.ActionExecutor;
 import services.executor.dtos.SchedulerDto;
 import services.restclients.result.testcaseresult.TestCaseResultServiceRestClient;
-import services.restclients.result.testcaseresult.models.TestCaseResultModel;
-import services.restclients.result.testcaseresult.models.UpdateTestCaseResultAsCompletedModel;
 import services.restclients.result.testcaseresult.models.enums.TestCaseResultStatusDao;
 import services.restclients.schedule.models.ScheduleTestPlanModel;
 import services.restclients.schedule.models.ScheduledTestCaseModel;
@@ -99,16 +98,13 @@ public class TestCaseExecutorImpl implements TestCaseExecutor {
                                             OffsetDateTime startedOn,
                                             OffsetDateTime completedOn) throws Exception {
 
-        UpdateTestCaseResultAsCompletedModel updateTestCaseResultAsCompletedModel = new UpdateTestCaseResultAsCompletedModel();
+        UpdateTestCaseResultModel updateTestCaseResultAsCompletedModel = new UpdateTestCaseResultModel();
         updateTestCaseResultAsCompletedModel.setStatus(TestCaseResultStatusDao.COMPLETED.name());
         if (StringUtils.isNotEmpty(errorMessage)) {
             updateTestCaseResultAsCompletedModel.setStatus(TestCaseResultStatusDao.ERROR.name());
         }
 
-        updateTestCaseResultAsCompletedModel.setModifiedBy(CanaSchedulerConstants.scheduleUser);
         updateTestCaseResultAsCompletedModel.setTotalDuration(String.valueOf(duration));
-        updateTestCaseResultAsCompletedModel.setStartedOn(startedOn.toString());
-        updateTestCaseResultAsCompletedModel.setCompletedOn(completedOn.toString());
         updateTestCaseResultAsCompletedModel.setErrorMessage(errorMessage);
 
         var response = testCaseResultServiceRestClient.updateTestCaseResultStatus(
