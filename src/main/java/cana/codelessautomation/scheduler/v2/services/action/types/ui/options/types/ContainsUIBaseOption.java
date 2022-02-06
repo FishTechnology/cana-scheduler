@@ -13,7 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 public class ContainsUIBaseOption implements UIBaseOption {
     @Override
     public String Name() {
-        return UIOptionType.Contains.name();
+        return UIOptionType.CONTAINS.name();
     }
 
     @Override

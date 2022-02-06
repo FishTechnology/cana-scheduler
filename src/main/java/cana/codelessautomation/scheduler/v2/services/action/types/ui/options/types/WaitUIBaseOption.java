@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class WaitUIBaseOption implements UIBaseOption {
     @Override
     public String Name() {
-        return UIOptionType.Wait.name();
+        return UIOptionType.WAIT.name();
     }
 
     @Override

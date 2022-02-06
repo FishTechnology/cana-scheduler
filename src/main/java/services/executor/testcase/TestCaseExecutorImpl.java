@@ -1,5 +1,6 @@
 package services.executor.testcase;
 
+import cana.codelessautomation.scheduler.v2.services.testplan.result.models.TestPlanResultModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -10,7 +11,6 @@ import services.restclients.result.testcaseresult.TestCaseResultServiceRestClien
 import services.restclients.result.testcaseresult.models.TestCaseResultModel;
 import services.restclients.result.testcaseresult.models.UpdateTestCaseResultAsCompletedModel;
 import services.restclients.result.testcaseresult.models.enums.TestCaseResultStatusDao;
-import services.restclients.result.testplanresult.models.TestPlanResultModel;
 import services.restclients.schedule.models.ScheduleTestPlanModel;
 import services.restclients.schedule.models.ScheduledTestCaseModel;
 

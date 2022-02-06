@@ -1,10 +1,10 @@
 package services.restclients.result.testplanresult;
 
+import cana.codelessautomation.scheduler.v2.services.testplan.result.models.TestPlanResultModel;
+import cana.codelessautomation.scheduler.v2.services.testplan.result.models.UpdateTestPlanResultAsCompletedModel;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import services.restclients.commons.ErrorMessageModel;
-import services.restclients.result.testplanresult.models.TestPlanResultModel;
-import services.restclients.result.testplanresult.models.UpdateTestPlanResultAsCompletedModel;
 
 import javax.validation.Valid;
 import javax.ws.rs.GET;

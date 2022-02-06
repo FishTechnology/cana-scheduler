@@ -13,7 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 public class SizeUIBaseOption implements UIBaseOption {
     @Override
     public String Name() {
-        return UIOptionType.Size.name();
+        return UIOptionType.SIZE.name();
     }
 
     @Override
