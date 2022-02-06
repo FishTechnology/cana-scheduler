@@ -1,4 +1,4 @@
-package services.restclients.result.testplanresult.models;
+package cana.codelessautomation.scheduler.v2.services.testplan.result.models;
 
 import com.googlecode.jmapper.annotations.JMap;
 import lombok.Data;

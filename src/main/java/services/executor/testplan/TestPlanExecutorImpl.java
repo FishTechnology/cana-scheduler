@@ -1,18 +1,12 @@
 package services.executor.testplan;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import services.commons.CanaSchedulerConstants;
 import services.executor.dtos.SchedulerDto;
 import services.executor.testcase.TestCaseExecutor;
-import services.restclients.commons.ErrorMessageModel;
 import services.restclients.result.testplanresult.TestPlanResultServiceRestClient;
-import services.restclients.result.testplanresult.models.UpdateTestPlanResultAsCompletedModel;
-import services.restclients.result.testplanresult.models.enums.TestPlanResultStatusDao;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.time.OffsetDateTime;
-import java.util.List;
 
 @ApplicationScoped
 public class TestPlanExecutorImpl implements TestPlanExecutor {
@@ -80,26 +74,26 @@ public class TestPlanExecutorImpl implements TestPlanExecutor {
 //        }
     }
 
-    private UpdateTestPlanResultAsCompletedModel getUpdateTestPlanResultAsCompletedModel(Boolean isErrorOccurred,
-                                                                                         String errorMessage,
-                                                                                         Long totalDuration,
-                                                                                         OffsetDateTime startedOn,
-                                                                                         OffsetDateTime completedOn) {
-        UpdateTestPlanResultAsCompletedModel updateTestPlanResultAsCompletedModel = new UpdateTestPlanResultAsCompletedModel();
-        if (isErrorOccurred) {
-            updateTestPlanResultAsCompletedModel.setStatus(TestPlanResultStatusDao.ERROR.name());
-        } else {
-            updateTestPlanResultAsCompletedModel.setStatus(TestPlanResultStatusDao.COMPLETED.name());
-        }
-        updateTestPlanResultAsCompletedModel.setErrorMessage(errorMessage);
-        updateTestPlanResultAsCompletedModel.setTotalDuration(String.valueOf(totalDuration));
-        updateTestPlanResultAsCompletedModel.setModifiedBy(CanaSchedulerConstants.scheduleUser);
-        updateTestPlanResultAsCompletedModel.setStartedOn(startedOn.toString());
-        updateTestPlanResultAsCompletedModel.setCompletedOn(completedOn.toString());
-        return updateTestPlanResultAsCompletedModel;
-    }
-
-    public List<ErrorMessageModel> updateTestPlanResultStatus(Long scheduleIterationId, Long testPlanResultId, UpdateTestPlanResultAsCompletedModel updateTestPlanResultStatus) {
-        return testPlanResultServiceRestClient.updateTestPlanResultStatus(scheduleIterationId, testPlanResultId, updateTestPlanResultStatus);
-    }
+//    private UpdateTestPlanResultAsCompletedModel getUpdateTestPlanResultAsCompletedModel(Boolean isErrorOccurred,
+//                                                                                         String errorMessage,
+//                                                                                         Long totalDuration,
+//                                                                                         OffsetDateTime startedOn,
+//                                                                                         OffsetDateTime completedOn) {
+//        UpdateTestPlanResultAsCompletedModel updateTestPlanResultAsCompletedModel = new UpdateTestPlanResultAsCompletedModel();
+//        if (isErrorOccurred) {
+//            updateTestPlanResultAsCompletedModel.setStatus(TestPlanResultStatusDao.ERROR.name());
+//        } else {
+//            updateTestPlanResultAsCompletedModel.setStatus(TestPlanResultStatusDao.COMPLETED.name());
+//        }
+//        updateTestPlanResultAsCompletedModel.setErrorMessage(errorMessage);
+//        updateTestPlanResultAsCompletedModel.setTotalDuration(String.valueOf(totalDuration));
+//        updateTestPlanResultAsCompletedModel.setModifiedBy(CanaSchedulerConstants.scheduleUser);
+//        updateTestPlanResultAsCompletedModel.setStartedOn(startedOn.toString());
+//        updateTestPlanResultAsCompletedModel.setCompletedOn(completedOn.toString());
+//        return updateTestPlanResultAsCompletedModel;
+//    }
+//
+//    public List<ErrorMessageModel> updateTestPlanResultStatus(Long scheduleIterationId, Long testPlanResultId, UpdateTestPlanResultAsCompletedModel updateTestPlanResultStatus) {
+//        return testPlanResultServiceRestClient.updateTestPlanResultStatus(scheduleIterationId, testPlanResultId, updateTestPlanResultStatus);
+//    }
 }

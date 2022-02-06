@@ -1,4 +1,4 @@
-package services.restclients.result.testplanresult.models;
+package cana.codelessautomation.scheduler.v2.services.testplan.result.models;
 
 import lombok.Data;
 
@@ -7,7 +7,4 @@ public class UpdateTestPlanResultAsCompletedModel {
     private String status;
     private String errorMessage;
     private String totalDuration;
-    private String modifiedBy;
-    private String startedOn;
-    private String completedOn;
 }
