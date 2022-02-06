@@ -16,11 +16,11 @@ import java.util.List;
 @RegisterRestClient
 public interface TestPlanResultServiceRestClient {
     @GET
-    @Path("scheduleIterationIds/{scheduleIterationId}")
+    @Path("/scheduleIterationIds/{scheduleIterationId}")
     TestPlanResultModel getTestPlanResultBySchIterId(@Valid @PathParam Long scheduleIterationId);
 
     @PUT
-    @Path("scheduleIterationIds/{scheduleIterationId}/testPlanResults/{testPlanResultId}/status")
+    @Path("/scheduleIterationIds/{scheduleIterationId}/testPlanResults/{testPlanResultId}/status")
     List<ErrorMessageModel> updateTestPlanResultStatus(@PathParam @Valid Long scheduleIterationId,
                                                        @PathParam @Valid Long testPlanResultId,
                                                        @Valid UpdateTestPlanResultAsCompletedModel updateTestPlanResultAsCompletedModel);
