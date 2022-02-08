@@ -13,7 +13,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>2.3.0.Final</quarkus.platform.version>
+        <quarkus.platform.version>2.7.0.Final</quarkus.platform.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     </properties>
     <dependencyManagement>
@@ -74,6 +74,7 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
+            <version>4.5.0</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
@@ -110,7 +111,7 @@
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
-            <version>6.1.2</version>
+            <version>6.2.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.browserup/browserup-proxy-core -->
         <dependency>
@@ -128,18 +129,17 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-remote-driver</artifactId>
-            <version>4.1.1</version>
+            <version>4.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>selenium</artifactId>
-            <version>1.16.2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-api</artifactId>
-            <version>4.1.1</version>
+            <version>4.1.2</version>
         </dependency>
     </dependencies>
     <build>
