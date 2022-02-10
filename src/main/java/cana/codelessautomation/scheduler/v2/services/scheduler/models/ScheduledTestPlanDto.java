@@ -21,4 +21,5 @@ public class ScheduledTestPlanDto {
     private List<ConfigModel> applicationConfigs;
     private TestPlanResultModel testPlanResultModel;
     private List<TestCaseResultModel> testCaseResultModels;
+    private TestCaseResultModel testCaseResultModel;
 }

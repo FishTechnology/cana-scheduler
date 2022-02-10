@@ -1,4 +1,4 @@
-package services.restclients.result.actionresult.models;
+package cana.codelessautomation.scheduler.v2.services.action.result.models;
 
 import lombok.Data;
 
@@ -8,7 +8,4 @@ public class UpdateActionResultModel {
     private String status;
     private String errorMessage;
     private String totalDuration;
-    private String modifiedBy;
-    private String startedOn;
-    private String completedOn;
 }

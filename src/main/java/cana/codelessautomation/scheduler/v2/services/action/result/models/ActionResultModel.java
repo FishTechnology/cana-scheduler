@@ -1,4 +1,4 @@
-package services.restclients.result.actionresult.models;
+package cana.codelessautomation.scheduler.v2.services.action.result.models;
 
 import lombok.Data;
 

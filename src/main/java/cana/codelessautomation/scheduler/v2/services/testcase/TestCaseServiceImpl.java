@@ -59,6 +59,9 @@ public class TestCaseServiceImpl implements TestCaseService {
         var sortedTestCases = testCaseModels.stream().sorted(Comparator.comparing(TestCaseModel::getExecutionOrder)).collect(Collectors.toList());
 
         for (TestCaseModel testCaseModel : sortedTestCases) {
+            if (startedOn == 0) {
+                startedOn = System.nanoTime();
+            }
 
             var testCaseResultModel = testCaseResultModels
                     .stream()
@@ -68,11 +71,14 @@ public class TestCaseServiceImpl implements TestCaseService {
                 throw new Exception("didn't find test case result for testCaseId testCaseId=" + testCaseModel.getId());
             }
 
+            scheduledTestPlanDto.setTestCaseResultModel(testCaseResultModel.get());
+
             updateTestCaseResultStatus(scheduledTestPlanDto, testCaseResultModel.get().getId(), TestCaseResultStatusDao.STARTED, startedOn, null);
 
             scheduledTestPlanDto.setTestCaseDetail(testCaseModel);
             var testCaseResultStatus = TestCaseResultStatusDao.COMPLETED;
-            String errorMessage = null;
+            String errorMessage;
+
             try {
                 actionService.execute(scheduledTestPlanDto);
 
@@ -83,6 +89,7 @@ public class TestCaseServiceImpl implements TestCaseService {
                 throw e;
             }
             updateTestCaseResultStatus(scheduledTestPlanDto, testCaseResultModel.get().getId(), testCaseResultStatus, startedOn, null);
+            startedOn = 0;
         }
     }
 
