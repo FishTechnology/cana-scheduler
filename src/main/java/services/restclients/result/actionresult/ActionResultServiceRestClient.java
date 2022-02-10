@@ -1,10 +1,10 @@
 package services.restclients.result.actionresult;
 
+import cana.codelessautomation.scheduler.v2.services.action.result.models.ActionResultModel;
+import cana.codelessautomation.scheduler.v2.services.action.result.models.UpdateActionResultModel;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import services.restclients.commons.ErrorMessageModel;
-import services.restclients.result.actionresult.models.ActionResultModel;
-import services.restclients.result.actionresult.models.UpdateActionResultModel;
 
 import javax.validation.Valid;
 import javax.ws.rs.GET;

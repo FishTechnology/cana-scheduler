@@ -1,6 +1,6 @@
 package services.executor.action.mappers;
 
-import services.restclients.result.actionresult.models.UpdateActionResultModel;
+import cana.codelessautomation.scheduler.v2.services.action.result.models.UpdateActionResultModel;
 
 import java.time.OffsetDateTime;
 
