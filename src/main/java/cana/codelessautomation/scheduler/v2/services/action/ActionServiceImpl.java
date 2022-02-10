@@ -69,7 +69,7 @@ public class ActionServiceImpl implements ActionService {
 
                     var currentActionResult = actionResultModels
                             .stream()
-                            .filter(x -> x.getActionId() == actionModel.getId())
+                            .filter(x -> Objects.equals(x.getActionId(), actionModel.getId()))
                             .findFirst();
 
                     if (currentActionResult.isEmpty()) {

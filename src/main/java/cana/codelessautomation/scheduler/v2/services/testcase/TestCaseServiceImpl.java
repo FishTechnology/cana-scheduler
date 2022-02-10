@@ -65,7 +65,7 @@ public class TestCaseServiceImpl implements TestCaseService {
 
             var testCaseResultModel = testCaseResultModels
                     .stream()
-                    .filter(testCaseConfig -> testCaseConfig.getTestCaseId() == testCaseModel.getId())
+                    .filter(testCaseConfig -> Objects.equals(testCaseConfig.getTestCaseId(), testCaseModel.getId()))
                     .findFirst();
             if (testCaseResultModel.isEmpty()) {
                 throw new Exception("didn't find test case result for testCaseId testCaseId=" + testCaseModel.getId());
