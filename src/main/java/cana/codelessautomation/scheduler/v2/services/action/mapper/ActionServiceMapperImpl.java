@@ -10,7 +10,7 @@ public class ActionServiceMapperImpl implements ActionServiceMapper {
     @Override
     public UpdateActionResultModel mapUpdateActionResultModel(ActionResultStatusDao actionResultStatusDao, long duration, String errorMessage) {
         UpdateActionResultModel updateActionResultModel = new UpdateActionResultModel();
-        updateActionResultModel.setStatus(ActionResultStatusDao.STARTED.name());
+        updateActionResultModel.setStatus(actionResultStatusDao.name());
         if(actionResultStatusDao == ActionResultStatusDao.COMPLETED || actionResultStatusDao == ActionResultStatusDao.ERROR)
         {
             updateActionResultModel.setTotalDuration(String.valueOf(duration));
