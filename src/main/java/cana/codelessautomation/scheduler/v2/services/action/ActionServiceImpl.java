@@ -3,7 +3,7 @@ package cana.codelessautomation.scheduler.v2.services.action;
 import cana.codelessautomation.scheduler.v2.services.action.mapper.ActionServiceMapper;
 import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
 import cana.codelessautomation.scheduler.v2.services.action.restclient.ActionServiceRestClient;
-import cana.codelessautomation.scheduler.v2.services.action.result.ActionResultRestClient;
+import cana.codelessautomation.scheduler.v2.services.action.result.restclient.ActionResultRestClient;
 import cana.codelessautomation.scheduler.v2.services.action.result.models.ActionResultModel;
 import cana.codelessautomation.scheduler.v2.services.action.types.Action;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
