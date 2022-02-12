@@ -9,6 +9,7 @@ import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledT
 import cana.codelessautomation.scheduler.v2.services.token.TokenService;
 import cana.codelessautomation.scheduler.v2.services.token.dtos.ScopeLevel;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import services.restclients.testcase.TestCaseModel;
 
@@ -29,20 +30,21 @@ public class InputActionImpl implements UIAction {
 
     @Override
     public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel) {
+        var tokenValue = scheduledActionDetailModel.getValue();
         var controlTypeAndIdDto = uiActionUtility.getIdAndValue(scheduledActionDetailModel.getKey());
         var webElement = uiActionUtility.getUIControl(schedulerDto.getScheduleDetail().getApplicationId(), controlTypeAndIdDto);
-
-        if (CollectionUtils.isNotEmpty(scheduledActionDetailModel.getActionOptionModels())) {
-            uiOption.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel, scheduledActionDetailModel.getActionOptionModels(), webElement);
-        }
-
         if (StringUtils.isNotEmpty(scheduledActionDetailModel.getValue())) {
-            var tokenValue = scheduledActionDetailModel.getValue();
             if (tokenService.hasToken(tokenValue)) {
                 tokenValue = tokenService.replaceToken(schedulerDto.getScheduleDetail().getApplicationId(),
                         tokenValue,
                         ScopeLevel.ACTION);
             }
+        }
+
+        if (CollectionUtils.isNotEmpty(scheduledActionDetailModel.getActionOptionModels())) {
+            uiOption.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel, scheduledActionDetailModel.getActionOptionModels(), webElement);
+        }
+        if (StringUtils.isNotEmpty(tokenValue) && BooleanUtils.isFalse(scheduledActionDetailModel.getIsAssertVerification())) {
             webElement.val(tokenValue);
         }
     }
