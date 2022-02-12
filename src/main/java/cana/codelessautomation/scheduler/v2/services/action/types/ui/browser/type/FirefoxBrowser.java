@@ -16,15 +16,19 @@ import java.net.URL;
 public class FirefoxBrowser extends BaseBrowserActionType implements BrowserTypeAction {
     @Override
     public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel) throws Exception {
-        if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.OPEN.name())) {
-            setup();
-        } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.CLOSE.name())) {
-            tearDown();
-        } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.URL.name())) {
-            assertUtl(scheduledActionDetailModel);
+        if (scheduledActionDetailModel.getIsAssertVerification()) {
+            if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.URL.name())) {
+                assertUtl(schedulerDto.getScheduleDetail().getApplicationId(), scheduledActionDetailModel);
 
-        } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.TITLE.name())) {
-            assertTitle(scheduledActionDetailModel);
+            } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.TITLE.name())) {
+                assertTitle(schedulerDto.getScheduleDetail().getApplicationId(), scheduledActionDetailModel);
+            }
+        } else {
+            if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.NAVIGATION.name())) {
+                setup(schedulerDto, scheduledActionDetailModel);
+            } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.CLOSE.name())) {
+                tearDown();
+            }
         }
     }
 
@@ -32,7 +36,7 @@ public class FirefoxBrowser extends BaseBrowserActionType implements BrowserType
         WebDriverRunner.closeWebDriver();
     }
 
-    private void setup() {
+    private void setup(ScheduledTestPlanDto schedulerDto, ActionDetailModel scheduledActionDetailModel) {
         RemoteWebDriver driver = null;
         try {
             driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), new FirefoxOptions());

@@ -41,10 +41,10 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
 
         if (scheduledActionDetailModel.getIsAssertVerification()) {
             if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.URL.name())) {
-                assertUtl(scheduledActionDetailModel);
+                assertUtl(schedulerDto.getScheduleDetail().getApplicationId(), scheduledActionDetailModel);
 
             } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.TITLE.name())) {
-                assertTitle(scheduledActionDetailModel);
+                assertTitle(schedulerDto.getScheduleDetail().getApplicationId(), scheduledActionDetailModel);
             }
         } else {
             if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.NAVIGATION.name())) {
