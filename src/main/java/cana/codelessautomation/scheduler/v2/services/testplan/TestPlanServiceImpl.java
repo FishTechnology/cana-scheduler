@@ -8,6 +8,7 @@ import cana.codelessautomation.scheduler.v2.services.testplan.result.mapper.Test
 import cana.codelessautomation.scheduler.v2.services.testplan.result.restclient.TestPlanResultRestClient;
 import org.apache.commons.collections.CollectionUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import services.restclients.result.actionresult.models.enums.ActionResultStatusDao;
 import services.restclients.testplan.models.TestPlanModel;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -60,46 +61,39 @@ public class TestPlanServiceImpl implements TestPlanService {
             throw new Exception("Error while getting TestPlanResult");
         }
 
-        try {
-            var updateTestPlanResultAsCompletedModel = testPlanResultServiceMapper.mapStartUpdateTestPlanResultAsCompletedModel();
-            var errors = testPlanResultRestClient.updateTestPlanResultStatus(
-                    scheduleIterationId,
-                    scheduledTestPlanDto.getTestPlanResultModel().getId(),
-                    updateTestPlanResultAsCompletedModel);
-
-            if (CollectionUtils.isNotEmpty(errors)) {
-                //TODO log error:
-                throw new Exception("Error while updating TestPlanResult as Started");
-            }
-        } catch (Exception exception) {
-            throw new Exception("Error while updating TestPlanResult");
-        }
-        String errorMessage = "";
+        updateTestPlanResult(scheduleIterationId, scheduledTestPlanDto.getTestPlanResultModel().getId(), ActionResultStatusDao.STARTED, startedOn, null);
 
         try {
 
             testCaseService.executeTestCase(scheduledTestPlanDto);
         } catch (Exception exception) {
-            errorMessage = exception.getMessage();
+            updateTestPlanResult(scheduleIterationId, scheduledTestPlanDto.getTestPlanResultModel().getId(), ActionResultStatusDao.ERROR, startedOn, exception.getMessage());
+            throw new Exception("Error occur while processing TestPln");
         }
 
-        var endedOn = System.nanoTime();
-        var duration = (endedOn - startedOn) / 1000000;
+        updateTestPlanResult(scheduleIterationId, scheduledTestPlanDto.getTestPlanResultModel().getId(), ActionResultStatusDao.COMPLETED, startedOn, null);
 
-        try {
-            var updateTestPlanResultAsCompletedModel = testPlanResultServiceMapper.mapEndUpdateTestPlanResultAsCompletedModel(TestPlanResultStatusDao.COMPLETED, duration, errorMessage);
-            var errors = testPlanResultRestClient.updateTestPlanResultStatus(
-                    scheduleIterationId,
-                    scheduledTestPlanDto.getTestPlanResultModel().getId(),
-                    updateTestPlanResultAsCompletedModel);
+    }
 
-            if (CollectionUtils.isNotEmpty(errors)) {
-                //TODO log error:
-                throw new Exception("Error while updating TestPlanResult");
-            }
-        } catch (Exception exception) {
-            throw new Exception("Error while updating TestPlanResult as End");
+    public void updateTestPlanResult(Long scheduleIterationId,
+                                     Long testPlanResultId,
+                                     ActionResultStatusDao actionResultStatusDao,
+                                     long startedOn,
+                                     String errorMessage) throws Exception {
+
+        var duration = 0L;
+        if (actionResultStatusDao == ActionResultStatusDao.COMPLETED || actionResultStatusDao == ActionResultStatusDao.ERROR) {
+            var endedOn = System.nanoTime();
+            duration = (endedOn - startedOn) / 1000000;
         }
-
+        var updateTestPlanResultAsCompletedModel = testPlanResultServiceMapper.mapEndUpdateTestPlanResultAsCompletedModel(TestPlanResultStatusDao.COMPLETED, duration, errorMessage);
+        var errors = testPlanResultRestClient.updateTestPlanResultStatus(
+                scheduleIterationId,
+                testPlanResultId,
+                updateTestPlanResultAsCompletedModel);
+        if (CollectionUtils.isNotEmpty(errors)) {
+            //TODO log error:
+            throw new Exception("Error while updating TestPlan");
+        }
     }
 }
