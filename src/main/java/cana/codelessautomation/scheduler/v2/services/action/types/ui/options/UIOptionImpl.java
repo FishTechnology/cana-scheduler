@@ -59,7 +59,7 @@ public class UIOptionImpl implements UIOption {
         }
 
         for (ActionOptionModel actionOptionModel : sortedOptions) {
-            if (isFirstActionOption) {
+            if (!isFirstActionOption) {
                 startedOn = System.nanoTime();
             }
 

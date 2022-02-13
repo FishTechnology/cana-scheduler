@@ -16,11 +16,11 @@ import java.util.List;
 @RegisterRestClient
 public interface ActionOptionResultRestClient {
     @GET
-    @Path("/actionResults/{actionResultId}/actionOptionResult")
+    @Path("/actionResults/{actionResultId}/actionOptionResults")
     List<ActionOptionResultModel> getActionOptionResultsByActionResultId(@Valid @PathParam Long actionResultId);
 
     @POST
-    @Path("/actionResults/{actionResultId}/actionOptionResult")
+    @Path("/actionResults/{actionResultId}/actionOptionResults/{actionOptionResultId}")
     List<ErrorMessageModel> updateActionOptionResult(
             @Valid @PathParam Long actionResultId,
             @Valid @PathParam Long actionOptionResultId,
