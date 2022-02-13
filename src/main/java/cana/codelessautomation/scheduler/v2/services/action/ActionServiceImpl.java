@@ -39,7 +39,7 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     public void execute(ScheduledTestPlanDto scheduledTestPlanDto) throws Exception {
-
+        var isFirstAction = true;
         var startedOn = System.nanoTime();
 
         var actionModels = (List<ActionDetailModel>) null;
@@ -64,6 +64,11 @@ public class ActionServiceImpl implements ActionService {
                 .collect(Collectors.toList());
 
         for (ActionDetailModel actionModel : sortedActions) {
+
+            if (!isFirstAction) {
+                startedOn = System.nanoTime();
+            }
+
             for (Action action : actionInstance) {
                 if (action.actionName() == actionModel.getType()) {
 
@@ -76,6 +81,8 @@ public class ActionServiceImpl implements ActionService {
                         throw new Exception("didn't find action result for actionId=" + actionModel.getId());
                     }
 
+                    scheduledTestPlanDto.setActionResultModel(currentActionResult.get());
+
                     try {
                         updateActionResult(scheduledTestPlanDto.getTestCaseResultModel(), currentActionResult.get(), ActionResultStatusDao.STARTED, 0, null);
                         action.execute(scheduledTestPlanDto, scheduledTestPlanDto.getTestCaseDetail(), actionModel);
@@ -85,6 +92,7 @@ public class ActionServiceImpl implements ActionService {
                     }
 
                     updateActionResult(scheduledTestPlanDto.getTestCaseResultModel(), currentActionResult.get(), ActionResultStatusDao.COMPLETED, startedOn, null);
+                    isFirstAction = false;
                 }
             }
         }

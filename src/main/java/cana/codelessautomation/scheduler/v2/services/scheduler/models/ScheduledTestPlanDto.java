@@ -1,5 +1,6 @@
 package cana.codelessautomation.scheduler.v2.services.scheduler.models;
 
+import cana.codelessautomation.scheduler.v2.services.action.result.models.ActionResultModel;
 import cana.codelessautomation.scheduler.v2.services.config.models.ConfigModel;
 import cana.codelessautomation.scheduler.v2.services.system.models.SystemConfigModel;
 import cana.codelessautomation.scheduler.v2.services.testcase.result.models.TestCaseResultModel;
@@ -22,4 +23,5 @@ public class ScheduledTestPlanDto {
     private TestPlanResultModel testPlanResultModel;
     private List<TestCaseResultModel> testCaseResultModels;
     private TestCaseResultModel testCaseResultModel;
+    private ActionResultModel actionResultModel;
 }

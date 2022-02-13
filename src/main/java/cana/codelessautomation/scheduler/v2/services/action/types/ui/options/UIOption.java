@@ -9,5 +9,5 @@ import services.restclients.testcase.TestCaseModel;
 import java.util.List;
 
 public interface UIOption {
-    void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, List<ActionOptionModel> actionOptionModel, SelenideElement webElement) throws TypeNotPresentException;
+    void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, List<ActionOptionModel> actionOptionModel, SelenideElement webElement) throws Exception;
 }
