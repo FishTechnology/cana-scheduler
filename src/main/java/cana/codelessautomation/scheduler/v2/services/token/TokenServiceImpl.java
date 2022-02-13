@@ -36,7 +36,8 @@ public class TokenServiceImpl implements TokenService {
             return value;
         }
         var tokenName = getTokenName(value);
-        return processToken(appId, tokenName, scopeLevel, false).getValue();
+        var tokenValue = processToken(appId, tokenName, scopeLevel, false).getValue();
+        return value.replace("{{" + tokenName + "}}", tokenValue);
     }
 
     @Override

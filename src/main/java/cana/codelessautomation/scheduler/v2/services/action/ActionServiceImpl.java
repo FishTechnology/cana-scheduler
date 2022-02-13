@@ -82,9 +82,8 @@ public class ActionServiceImpl implements ActionService {
                     }
 
                     scheduledTestPlanDto.setActionResultModel(currentActionResult.get());
-
+                    updateActionResult(scheduledTestPlanDto.getTestCaseResultModel(), currentActionResult.get(), ActionResultStatusDao.STARTED, 0, null);
                     try {
-                        updateActionResult(scheduledTestPlanDto.getTestCaseResultModel(), currentActionResult.get(), ActionResultStatusDao.STARTED, 0, null);
                         action.execute(scheduledTestPlanDto, scheduledTestPlanDto.getTestCaseDetail(), actionModel);
                     } catch (Exception exception) {
                         updateActionResult(scheduledTestPlanDto.getTestCaseResultModel(), currentActionResult.get(), ActionResultStatusDao.ERROR, startedOn, exception.getMessage());
