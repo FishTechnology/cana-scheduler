@@ -9,6 +9,7 @@ import cana.codelessautomation.scheduler.v2.services.action.types.Action;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
 import cana.codelessautomation.scheduler.v2.services.testcase.result.models.TestCaseResultModel;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import services.restclients.result.actionresult.models.enums.ActionResultStatusDao;
 
@@ -87,6 +88,9 @@ public class ActionServiceImpl implements ActionService {
                         action.execute(scheduledTestPlanDto, scheduledTestPlanDto.getTestCaseDetail(), actionModel);
                     } catch (Exception exception) {
                         updateActionResult(scheduledTestPlanDto.getTestCaseResultModel(), currentActionResult.get(), ActionResultStatusDao.ERROR, startedOn, exception.getMessage());
+                        if (BooleanUtils.isTrue(actionModel.getIsOptional())) {
+                            continue;
+                        }
                         throw exception;
                     }
 
