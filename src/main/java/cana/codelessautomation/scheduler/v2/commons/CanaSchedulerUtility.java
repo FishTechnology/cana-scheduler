@@ -7,6 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CanaSchedulerUtility {
+
+    public static String getMessage(Throwable exception) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Message=" + exception.getMessage());
+        sb.append("CauseBy=" + exception.getCause());
+        sb.append("StackTrace=" + exception.getStackTrace());
+        return sb.toString();
+    }
+
     public static String getMessage(Exception exception) {
         StringBuilder sb = new StringBuilder();
         sb.append("Message=" + exception.getMessage());

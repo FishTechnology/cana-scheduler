@@ -91,6 +91,9 @@ public class ActionServiceImpl implements ActionService {
                         if (BooleanUtils.isTrue(actionModel.getIsOptional())) {
                             continue;
                         }
+                        if (throwable instanceof Throwable) {
+                            throw new Exception(throwable);
+                        }
                         throw throwable;
                     }
 

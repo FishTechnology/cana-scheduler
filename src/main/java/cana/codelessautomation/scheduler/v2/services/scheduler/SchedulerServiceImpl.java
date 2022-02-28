@@ -8,6 +8,7 @@ import cana.codelessautomation.scheduler.v2.services.system.models.GetSystemConf
 import cana.codelessautomation.scheduler.v2.services.system.models.SystemConfigModel;
 import cana.codelessautomation.scheduler.v2.services.system.restclient.SystemConfigRestClient;
 import cana.codelessautomation.scheduler.v2.services.testplan.TestPlanService;
+import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -111,6 +112,8 @@ public class SchedulerServiceImpl implements SchedulerService {
             scheduleErrorMessage = CanaSchedulerUtility.getMessage(ex);
         }
 
+        checkBrowserClose();
+
         var endedOn = System.nanoTime();
 
         ScheduleStatusDao scheduleStatus = ScheduleStatusDao.COMPLETED;
@@ -128,6 +131,14 @@ public class SchedulerServiceImpl implements SchedulerService {
         } catch (Exception ex) {
             //TODO: log error message
             return;
+        }
+    }
+
+    private void checkBrowserClose() {
+        try {
+            WebDriverRunner.closeWebDriver();
+        } catch (Exception ex) {
+            // we can skip this error if window already closed.
         }
     }
 

@@ -21,11 +21,11 @@ public class BaseBrowserActionType {
     TokenService tokenService;
 
 
-    void assertUtl(Long applicationId, ActionDetailModel scheduledActionDetailModel) throws Exception {
+    void assertUtl(Long applicationId,Long environmentId, ActionDetailModel scheduledActionDetailModel) throws Exception {
         var browserUrl = url();
         var actualValue = scheduledActionDetailModel.getBrowserValue();
         if (tokenService.hasToken(actualValue)) {
-            actualValue = tokenService.replaceToken(applicationId, actualValue, ScopeLevel.ACTION);
+            actualValue = tokenService.replaceToken(applicationId, actualValue,environmentId, ScopeLevel.ACTION);
         }
         var conditionType = ConditionType.EQUAL;
         if (!StringUtils.isEmpty(scheduledActionDetailModel.getConditionType())) {
@@ -38,11 +38,11 @@ public class BaseBrowserActionType {
         throw new Exception(message);
     }
 
-    void assertTitle(Long applicationId, ActionDetailModel scheduledActionDetailModel) throws Exception {
+    void assertTitle(Long applicationId,Long environmentId, ActionDetailModel scheduledActionDetailModel) throws Exception {
         var title = title();
         var actualValue = scheduledActionDetailModel.getBrowserValue();
         if (tokenService.hasToken(actualValue)) {
-            actualValue = tokenService.replaceToken(applicationId, actualValue, ScopeLevel.ACTION);
+            actualValue = tokenService.replaceToken(applicationId, actualValue, environmentId, ScopeLevel.ACTION);
         }
         var conditionType = ConditionType.EQUAL;
         if (!StringUtils.isEmpty(scheduledActionDetailModel.getConditionType())) {

@@ -18,10 +18,10 @@ public class FirefoxBrowser extends BaseBrowserActionType implements BrowserType
     public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel) throws Exception {
         if (scheduledActionDetailModel.getIsAssertVerification()) {
             if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.URL.name())) {
-                assertUtl(schedulerDto.getScheduleDetail().getApplicationId(), scheduledActionDetailModel);
+                assertUtl(schedulerDto.getScheduleDetail().getApplicationId(), schedulerDto.getScheduleDetail().getEnvironmentId(), scheduledActionDetailModel);
 
             } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.TITLE.name())) {
-                assertTitle(schedulerDto.getScheduleDetail().getApplicationId(), scheduledActionDetailModel);
+                assertTitle(schedulerDto.getScheduleDetail().getApplicationId(), schedulerDto.getScheduleDetail().getEnvironmentId(), scheduledActionDetailModel);
             }
         } else {
             if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.NAVIGATION.name())) {

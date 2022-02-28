@@ -41,10 +41,10 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
 
         if (scheduledActionDetailModel.getIsAssertVerification()) {
             if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.URL.name())) {
-                assertUtl(schedulerDto.getScheduleDetail().getApplicationId(), scheduledActionDetailModel);
+                assertUtl(schedulerDto.getScheduleDetail().getApplicationId(), schedulerDto.getScheduleDetail().getEnvironmentId(), scheduledActionDetailModel);
 
             } else if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.TITLE.name())) {
-                assertTitle(schedulerDto.getScheduleDetail().getApplicationId(), scheduledActionDetailModel);
+                assertTitle(schedulerDto.getScheduleDetail().getApplicationId(), schedulerDto.getScheduleDetail().getEnvironmentId(), scheduledActionDetailModel);
             }
         } else {
             if (StringUtils.equalsAnyIgnoreCase(scheduledActionDetailModel.getBrowserActionType(), BrowserActionTypeDao.NAVIGATION.name())) {
@@ -72,6 +72,7 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
         var acceptUntrustedCertsConfig = tokenService.getToken(
                 schedulerDto.getScheduleDetail().getApplicationId(),
                 SystemVariableEnum.ACCEPT_UNTRUSTED_CERTS.name(),
+                schedulerDto.getScheduleDetail().getEnvironmentId(),
                 ScopeLevel.ACTION,
                 true);
         if (!Objects.isNull(acceptUntrustedCertsConfig) && BooleanUtils.toBoolean(acceptUntrustedCertsConfig.getValue())) {
@@ -91,6 +92,7 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
                 if (tokenService.hasToken(scheduledActionDetailModel.getBrowserValue())) {
                     tokenValue = tokenService.replaceToken(schedulerDto.getScheduleDetail().getApplicationId(),
                             scheduledActionDetailModel.getBrowserValue(),
+                            schedulerDto.getScheduleDetail().getEnvironmentId(),
                             ScopeLevel.ACTION);
                 }
                 open(tokenValue);

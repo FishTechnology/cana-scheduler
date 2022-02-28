@@ -26,22 +26,22 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public ConfigKeyValueModel getToken(Long appId, String value, ScopeLevel scopeLevel, boolean isApplicationVariable) {
-        return processToken(appId, value, scopeLevel, isApplicationVariable);
+    public ConfigKeyValueModel getToken(Long appId, String value, Long environmentId, ScopeLevel scopeLevel, boolean isApplicationVariable) {
+        return processToken(appId, value, environmentId, scopeLevel, isApplicationVariable);
     }
 
     @Override
-    public String replaceToken(Long appId, String value, ScopeLevel scopeLevel) {
+    public String replaceToken(Long appId, String value, Long environmentId, ScopeLevel scopeLevel) {
         if (!hasToken(value)) {
             return value;
         }
         var tokenName = getTokenName(value);
-        var tokenValue = processToken(appId, tokenName, scopeLevel, false).getValue();
+        var tokenValue = processToken(appId, tokenName, environmentId, scopeLevel, false).getValue();
         return value.replace("{{" + tokenName + "}}", tokenValue);
     }
 
     @Override
-    public ConfigKeyValueModel processToken(Long appId, String tokenName, ScopeLevel scopeLevel, boolean isApplicationVariable) {
+    public ConfigKeyValueModel processToken(Long appId, String tokenName, Long environmentId, ScopeLevel scopeLevel, boolean isApplicationVariable) {
         ConfigKeyValueModel tokenValue;
 
         var configs = configServiceRestClient.getConfigsByAppId(appId);

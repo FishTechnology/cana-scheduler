@@ -37,6 +37,7 @@ public class InputActionImpl implements UIAction {
             if (tokenService.hasToken(tokenValue)) {
                 tokenValue = tokenService.replaceToken(schedulerDto.getScheduleDetail().getApplicationId(),
                         tokenValue,
+                        schedulerDto.getScheduleDetail().getEnvironmentId(),
                         ScopeLevel.ACTION);
             }
         }
