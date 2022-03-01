@@ -32,6 +32,11 @@ public class InputActionImpl implements UIAction {
     public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel) throws Exception {
         var tokenValue = scheduledActionDetailModel.getValue();
         var controlTypeAndIdDto = uiActionUtility.getIdAndValue(scheduledActionDetailModel.getKey());
+
+        if (CollectionUtils.isNotEmpty(scheduledActionDetailModel.getActionOptionModels())) {
+            uiOption.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel, scheduledActionDetailModel.getActionOptionModels());
+        }
+
         var webElement = uiActionUtility.getUIControl(schedulerDto.getScheduleDetail().getApplicationId(), controlTypeAndIdDto);
         if (StringUtils.isNotEmpty(scheduledActionDetailModel.getValue())) {
             if (tokenService.hasToken(tokenValue)) {
@@ -42,9 +47,6 @@ public class InputActionImpl implements UIAction {
             }
         }
 
-        if (CollectionUtils.isNotEmpty(scheduledActionDetailModel.getActionOptionModels())) {
-            uiOption.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel, scheduledActionDetailModel.getActionOptionModels(), webElement);
-        }
         if (StringUtils.isNotEmpty(tokenValue) && BooleanUtils.isFalse(scheduledActionDetailModel.getIsAssertVerification())) {
             webElement.val(tokenValue);
         }

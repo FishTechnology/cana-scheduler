@@ -10,7 +10,6 @@ import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.map
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.UIBaseOption;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.dtos.UIOptionType;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
-import com.codeborne.selenide.SelenideElement;
 import com.thoughtworks.xstream.converters.ConversionException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
@@ -42,8 +41,7 @@ public class UIOptionImpl implements UIOption {
     public void execute(ScheduledTestPlanDto schedulerDto,
                         TestCaseModel scheduledTestCaseModel,
                         ActionDetailModel actionDetailModel,
-                        List<ActionOptionModel> actionOptionModels,
-                        SelenideElement webElement) throws Exception {
+                        List<ActionOptionModel> actionOptionModels) throws Exception {
         var startedOn = System.nanoTime();
         var isFirstActionOption = true;
 
@@ -79,7 +77,7 @@ public class UIOptionImpl implements UIOption {
             for (UIBaseOption uiBaseOption : uiOptions) {
                 if (StringUtils.equalsAnyIgnoreCase(uiBaseOption.Name(), actionOptionModel.getOptionType())) {
                     try {
-                        uiBaseOption.execute(schedulerDto, scheduledTestCaseModel, actionDetailModel, actionOptionModel, webElement);
+                        uiBaseOption.execute(schedulerDto, scheduledTestCaseModel, actionDetailModel, actionOptionModel);
                     } catch (Exception exception) {
                         updateActionResult(schedulerDto.getActionResultModel(), currentActionOptionResult.get(), ActionOptionResultStatus.ERROR, startedOn, exception.getMessage());
                         throw new Exception("Error occur in processing UIActionOptions");

@@ -4,7 +4,6 @@ import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailM
 import cana.codelessautomation.scheduler.v2.services.action.models.ActionOptionModel;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.dtos.UIOptionType;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
-import com.codeborne.selenide.SelenideElement;
 import services.restclients.testcase.TestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -19,7 +18,7 @@ public class WaitUIBaseOption implements UIBaseOption {
     }
 
     @Override
-    public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel, SelenideElement webElement) {
+    public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel) {
         try {
             TimeUnit.MILLISECONDS.sleep(actionOptionModel.getWaitDuration());
         } catch (InterruptedException ie) {

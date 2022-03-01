@@ -29,7 +29,7 @@ public class ClickActionImpl implements UIAction {
         var webElement = uiActionUtility.getUIControl(schedulerDto.getScheduleDetail().getApplicationId(), controlTypeAndIdDto);
 
         if (CollectionUtils.isNotEmpty(scheduledActionDetailModel.getActionOptionModels())) {
-            uiOption.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel, scheduledActionDetailModel.getActionOptionModels(), webElement);
+            uiOption.execute(schedulerDto, scheduledTestCaseModel, scheduledActionDetailModel, scheduledActionDetailModel.getActionOptionModels());
         }
         if (BooleanUtils.isFalse(scheduledActionDetailModel.getIsAssertVerification())) {
             webElement.click();

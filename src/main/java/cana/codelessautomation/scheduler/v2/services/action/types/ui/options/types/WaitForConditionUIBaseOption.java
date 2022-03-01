@@ -2,33 +2,66 @@ package cana.codelessautomation.scheduler.v2.services.action.types.ui.options.ty
 
 import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
 import cana.codelessautomation.scheduler.v2.services.action.models.ActionOptionModel;
+import cana.codelessautomation.scheduler.v2.services.action.types.ui.dtos.ControlTypeAndIdDto;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.dtos.ConditionType;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.dtos.UIOptionType;
+import cana.codelessautomation.scheduler.v2.services.action.types.ui.utilities.UIActionUtility;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
 import com.thoughtworks.xstream.converters.ConversionException;
 import org.apache.commons.lang3.EnumUtils;
+import org.openqa.selenium.By;
 import services.restclients.testcase.TestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.Duration;
+import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$;
 
 @ApplicationScoped
 public class WaitForConditionUIBaseOption implements UIBaseOption {
+    @Inject
+    UIActionUtility uiActionUtility;
+
     @Override
     public String Name() {
         return UIOptionType.WAIT_FOR.name();
     }
 
     @Override
-    public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel, SelenideElement webElement) {
+    public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel) {
         if (!EnumUtils.isValidEnumIgnoreCase(ConditionType.class, actionOptionModel.getConditionType())) {
             throw new ConversionException("Condition type is not found Type=" + actionOptionModel.getConditionType(), null);
         }
 
-        $(webElement).shouldBe(getSelenideCondition(EnumUtils.getEnumIgnoreCase(ConditionType.class, actionOptionModel.getConditionType())));
+        var controlTypeAndIdDto = uiActionUtility.getIdAndValue(scheduledActionDetailModel.getKey());
+
+        var elementSelector = getSelector(controlTypeAndIdDto);
+
+        if (Objects.isNull(actionOptionModel.getDuration())) {
+            actionOptionModel.setDuration(4L);
+        }
+
+        $(elementSelector).shouldBe(getSelenideCondition(EnumUtils.getEnumIgnoreCase(ConditionType.class, actionOptionModel.getConditionType())), Duration.ofSeconds(actionOptionModel.getDuration()));
+    }
+
+    public By getSelector(ControlTypeAndIdDto controlTypeAndIdDto) {
+        By selector = null;
+        switch (controlTypeAndIdDto.getControlIdType()) {
+            case ID:
+                selector = By.id(controlTypeAndIdDto.getId());
+                break;
+            case XPATH:
+                selector = By.xpath(controlTypeAndIdDto.getId());
+                break;
+            case CSS:
+                selector = By.cssSelector(controlTypeAndIdDto.getId());
+                break;
+        }
+
+        return selector;
     }
 
     public Condition getSelenideCondition(ConditionType conditionType) {

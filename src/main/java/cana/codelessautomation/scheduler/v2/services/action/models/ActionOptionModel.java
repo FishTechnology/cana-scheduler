@@ -15,4 +15,5 @@ public class ActionOptionModel {
     private String createdBy;
     private String modifiedBy;
     private Boolean isActive;
+    private Long duration;
 }
