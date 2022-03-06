@@ -20,7 +20,7 @@ public class WaitUIBaseOption implements UIBaseOption {
     @Override
     public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel) {
         try {
-            TimeUnit.MILLISECONDS.sleep(actionOptionModel.getWaitDuration());
+            TimeUnit.MILLISECONDS.sleep(actionOptionModel.getDuration());
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
