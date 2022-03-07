@@ -3,6 +3,6 @@ package cana.codelessautomation.scheduler.v2.services.action.types.ui.options.ty
 public enum UIOptionType {
     CONTROL,
     WAIT,
-    TEXT,
+    CONTENT,
     SIZE
 }

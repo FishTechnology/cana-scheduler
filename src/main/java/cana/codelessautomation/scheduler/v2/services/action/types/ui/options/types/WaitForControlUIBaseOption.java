@@ -29,9 +29,9 @@ public class WaitForControlUIBaseOption extends BaseUIOptionLogic implements UIB
     }
 
     @Override
-    public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel) {
-        if (!EnumUtils.isValidEnumIgnoreCase(UIOptionControlTypeDao.class, actionOptionModel.getOptionType())) {
-            throw new ConversionException("Condition type is not found Type=" + actionOptionModel.getOptionType(), null);
+    public Exception execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel) {
+        if (!EnumUtils.isValidEnumIgnoreCase(UIOptionControlTypeDao.class, actionOptionModel.getControlType())) {
+            throw new ConversionException("Control type is not found Type=" + actionOptionModel.getControlType(), null);
         }
 
         var controlTypeAndIdDto = uiActionUtility.getIdAndValue(scheduledActionDetailModel.getKey());
@@ -43,6 +43,7 @@ public class WaitForControlUIBaseOption extends BaseUIOptionLogic implements UIB
         }
 
         $(elementSelector).shouldBe(getSelenideCondition(EnumUtils.getEnumIgnoreCase(UIOptionControlTypeDao.class, actionOptionModel.getOptionType())), Duration.ofSeconds(actionOptionModel.getDuration()));
+        return null;
     }
 
     public Condition getSelenideCondition(UIOptionControlTypeDao conditionType) {

@@ -15,6 +15,6 @@ public class ActionOptionModel {
     private String modifiedBy;
     private Boolean isActive;
     private String value;
-    private String textType;
+    private String contentType;
     private Long duration;
 }

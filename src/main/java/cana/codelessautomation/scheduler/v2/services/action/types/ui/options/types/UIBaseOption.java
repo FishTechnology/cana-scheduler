@@ -8,5 +8,5 @@ import services.restclients.testcase.TestCaseModel;
 public interface UIBaseOption {
     String Name();
 
-    void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel);
+    Exception execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel);
 }

@@ -31,32 +31,39 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-client</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-jackson</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
+            <version>2.7.2.Final</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.quarkus/quarkus-smallrye-openapi -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-openapi</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.googlecode.jmapper-framework/jmapper-core -->
         <dependency>
@@ -98,20 +105,23 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest-client-jackson</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-multipart</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-scheduler</artifactId>
+            <version>2.7.2.Final</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.codeborne/selenide -->
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
-            <version>6.3.0</version>
+            <version>6.3.3</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.browserup/browserup-proxy-core -->
         <dependency>

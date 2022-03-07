@@ -1,6 +1,6 @@
 package cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.dtos;
 
-public enum UIOptionTextTypeDao {
+public enum UIOptionContentTypeDao {
     START_WITH,
     END_WITH,
     CONTAINS,
