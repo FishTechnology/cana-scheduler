@@ -5,6 +5,7 @@ import cana.codelessautomation.scheduler.v2.services.config.models.ConfigModel;
 import cana.codelessautomation.scheduler.v2.services.config.restclient.ConfigServiceRestClient;
 import cana.codelessautomation.scheduler.v2.services.token.daos.ConfigTypeDao;
 import cana.codelessautomation.scheduler.v2.services.token.dtos.ScopeLevel;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
@@ -42,15 +43,18 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public ConfigKeyValueModel processToken(Long appId, String tokenName, Long environmentId, ScopeLevel scopeLevel, boolean isApplicationVariable) {
-        ConfigKeyValueModel tokenValue;
+        ConfigKeyValueModel tokenValue = null;
 
         var configs = configServiceRestClient.getConfigsByAppId(appId);
+        if (CollectionUtils.isEmpty(configs)) {
+            return null;
+        }
         tokenValue = getToken(configs, ConfigTypeDao.GLOBAL_VARIABLE, tokenName, isApplicationVariable);
         if (scopeLevel == ScopeLevel.GLOBAL_VARIABLE) {
             return tokenValue;
         }
 
-        var environmentTokenValue = getToken(configs, ConfigTypeDao.ENVIRONMENT_VARIABLE, tokenName, isApplicationVariable);
+        var environmentTokenValue = getEnvironmentToken(configs, ConfigTypeDao.ENVIRONMENT_VARIABLE, tokenName, isApplicationVariable, environmentId);
         if (!Objects.isNull(environmentTokenValue)) {
             tokenValue = environmentTokenValue;
         }
@@ -82,6 +86,30 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public ConfigKeyValueModel getEnvironmentToken(List<ConfigModel> configs, ConfigTypeDao configType, String tokenName, boolean isApplicationVariable, Long environmentId) {
+        var configModels = configs
+                .stream()
+                .filter(config -> Objects.equals(config.getId(), String.valueOf(environmentId)) && StringUtils.equalsAnyIgnoreCase(config.getType(), configType.name()))
+                .findFirst();
+
+        if (configModels.isEmpty()) {
+            return null;
+        }
+
+        var configKeyValues = configModels
+                .get()
+                .getConfigKeyValues()
+                .stream()
+                .filter(config -> StringUtils.equalsAnyIgnoreCase(config.getKey(), tokenName))
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(configKeyValues)) {
+            return null;
+        }
+
+        return configKeyValues.get(0);
+    }
+
+    @Override
     public ConfigKeyValueModel getToken(List<ConfigModel> configModels, ConfigTypeDao configType, String tokenName, boolean isApplicationVariable) {
         ConfigKeyValueModel configKeyValueModel = null;
         var globalConfigs = configModels
@@ -91,6 +119,9 @@ public class TokenServiceImpl implements TokenService {
 
         if (globalConfigs.size() > 0) {
             var globalConfig = globalConfigs.get(0);
+            if (Objects.isNull(globalConfig.getConfigKeyValues())) {
+                return null;
+            }
             var tokenValueConfig = globalConfig
                     .getConfigKeyValues()
                     .stream()

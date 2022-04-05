@@ -2,13 +2,15 @@ package cana.codelessautomation.scheduler.v2.services.action.types.ui.options.ty
 
 import cana.codelessautomation.scheduler.v2.services.action.models.ActionDetailModel;
 import cana.codelessautomation.scheduler.v2.services.action.models.ActionOptionModel;
-import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.dtos.UIOptionControlTypeDao;
+import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.dtos.UIControlConditionControlTypeDao;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.types.dtos.UIOptionType;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.utilities.UIActionUtility;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
 import com.codeborne.selenide.Condition;
 import com.thoughtworks.xstream.converters.ConversionException;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.testcontainers.shaded.org.apache.commons.lang.NullArgumentException;
 import services.restclients.testcase.TestCaseModel;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -30,8 +32,12 @@ public class WaitForControlUIBaseOption extends BaseUIOptionLogic implements UIB
 
     @Override
     public Exception execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel, ActionOptionModel actionOptionModel) {
-        if (!EnumUtils.isValidEnumIgnoreCase(UIOptionControlTypeDao.class, actionOptionModel.getControlType())) {
-            throw new ConversionException("Control type is not found Type=" + actionOptionModel.getControlType(), null);
+        if (StringUtils.isEmpty(actionOptionModel.getControlConditionType())) {
+            throw new NullArgumentException("ControlType option is empty");
+        }
+
+        if (!EnumUtils.isValidEnumIgnoreCase(UIControlConditionControlTypeDao.class, actionOptionModel.getControlConditionType())) {
+            throw new ConversionException("Control type is not found Type=" + actionOptionModel.getControlConditionType(), null);
         }
 
         var controlTypeAndIdDto = uiActionUtility.getIdAndValue(scheduledActionDetailModel.getKey());
@@ -42,11 +48,11 @@ public class WaitForControlUIBaseOption extends BaseUIOptionLogic implements UIB
             actionOptionModel.setDuration(4L);
         }
 
-        $(elementSelector).shouldBe(getSelenideCondition(EnumUtils.getEnumIgnoreCase(UIOptionControlTypeDao.class, actionOptionModel.getOptionType())), Duration.ofSeconds(actionOptionModel.getDuration()));
+        $(elementSelector).shouldBe(getSelenideCondition(EnumUtils.getEnumIgnoreCase(UIControlConditionControlTypeDao.class, actionOptionModel.getContentType())), Duration.ofSeconds(actionOptionModel.getDuration()));
         return null;
     }
 
-    public Condition getSelenideCondition(UIOptionControlTypeDao conditionType) {
+    public Condition getSelenideCondition(UIControlConditionControlTypeDao conditionType) {
         Condition condition = null;
 
         switch (conditionType) {

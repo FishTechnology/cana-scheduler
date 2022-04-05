@@ -16,6 +16,8 @@ public interface TokenService {
 
     ConfigKeyValueModel processToken(Long appId, String tokenName, Long environmentId, ScopeLevel scopeLevel, boolean isApplicationVariable);
 
+    ConfigKeyValueModel getEnvironmentToken(List<ConfigModel> configs, ConfigTypeDao environmentVariable, String tokenName, boolean isApplicationVariable, Long environmentId);
+
     ConfigKeyValueModel getToken(List<ConfigModel> configModels, ConfigTypeDao configType, String tokenName, boolean isApplicationVariable);
 
     String getTokenName(String value);

@@ -33,4 +33,6 @@ public class ScheduleIterationModel {
     private String modifiedBy;
     @JMap
     private String browserType;
+    @JMap
+    private String resolution;
 }

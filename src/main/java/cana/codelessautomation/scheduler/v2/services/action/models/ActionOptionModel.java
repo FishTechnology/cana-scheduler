@@ -8,13 +8,13 @@ public class ActionOptionModel {
     private Long actionId;
     private String optionType;
     private Long order;
-    private String controlType;
-    private String createdOn;
-    private String modifiedOn;
-    private String createdBy;
-    private String modifiedBy;
+    private String controlConditionType;
     private Boolean isActive;
     private String value;
     private String contentType;
     private Long duration;
+    private String createdOn;
+    private String modifiedOn;
+    private String createdBy;
+    private String modifiedBy;
 }

@@ -83,9 +83,17 @@ public class ChromeBrowser extends BaseBrowserActionType implements BrowserTypeA
             chromeOptions.setCapability("se:recordVideo", true);
         }
 
+        if (StringUtils.isNotEmpty(schedulerDto.getScheduleDetail().getScheduleIteration().getResolution())) {
+            chromeOptions.setCapability("se:screenResolution", schedulerDto.getScheduleDetail().getScheduleIteration().getResolution());
+        }
+
         try {
             driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), chromeOptions);
             WebDriverRunner.setWebDriver(driver);
+
+            updateSession(schedulerDto.getScheduleDetail().getId(),
+                    schedulerDto.getTestPlanResultModel().getScheduleIterationId(),
+                    driver.getSessionId().toString());
 
             if (!StringUtils.isEmpty(scheduledActionDetailModel.getBrowserValue())) {
                 var tokenValue = scheduledActionDetailModel.getBrowserValue();
