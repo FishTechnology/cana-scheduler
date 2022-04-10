@@ -36,7 +36,7 @@ public interface ScheduleServiceRestClient {
 
 
     @PUT
-    @Path("")
+    @Path("schedules/{scheduleId}/iterations/{iterationId}/session")
     List<ErrorMessageModel> updateScheduleSession(@Valid @PathParam Long scheduleId,
                                                   @Valid @PathParam Long iterationId,
                                                   @Valid UpdateScheduleSessionModel updateScheduleSessionModel);

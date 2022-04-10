@@ -48,7 +48,7 @@ public class WaitForControlUIBaseOption extends BaseUIOptionLogic implements UIB
             actionOptionModel.setDuration(4L);
         }
 
-        $(elementSelector).shouldBe(getSelenideCondition(EnumUtils.getEnumIgnoreCase(UIControlConditionControlTypeDao.class, actionOptionModel.getContentType())), Duration.ofSeconds(actionOptionModel.getDuration()));
+        $(elementSelector).shouldBe(getSelenideCondition(EnumUtils.getEnumIgnoreCase(UIControlConditionControlTypeDao.class, actionOptionModel.getControlConditionType())), Duration.ofSeconds(actionOptionModel.getDuration()));
         return null;
     }
 
