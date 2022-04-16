@@ -26,4 +26,5 @@ public class ActionDetailModel {
     private String conditionType;
     private Boolean isOptional;
     private List<ActionOptionModel> actionOptionModels;
+    private List<ActionKeyModel> actionKeys;
 }
