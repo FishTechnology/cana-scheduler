@@ -30,6 +30,7 @@ public class UIActionKeyImpl implements UIActionKey {
                 keys = Keys.NULL;
                 break;
             case CANCEL:
+                keys = Keys.CANCEL;
                 break;
             case HELP:
                 break;
