@@ -5,6 +5,7 @@ import cana.codelessautomation.scheduler.v2.services.action.types.ui.UIAction;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.UIActionType;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.input.types.UIInputType;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.input.types.UIInputTypeName;
+import cana.codelessautomation.scheduler.v2.services.action.types.ui.key.UIActionKey;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.options.UIOption;
 import cana.codelessautomation.scheduler.v2.services.action.types.ui.utilities.UIActionUtility;
 import cana.codelessautomation.scheduler.v2.services.scheduler.models.ScheduledTestPlanDto;
@@ -35,6 +36,15 @@ public class InputActionImpl implements UIAction {
     @Inject
     Instance<UIInputType> uiInputTypes;
 
+    @Inject
+    UIActionKey uiActionKey;
+
+    /**
+     * @param schedulerDto
+     * @param scheduledTestCaseModel
+     * @param scheduledActionDetailModel
+     * @throws Exception
+     */
     @Override
     public void execute(ScheduledTestPlanDto schedulerDto, TestCaseModel scheduledTestCaseModel, ActionDetailModel scheduledActionDetailModel) throws Exception {
         var tokenValue = scheduledActionDetailModel.getValue();
@@ -64,8 +74,15 @@ public class InputActionImpl implements UIAction {
             }
             webElement.val(tokenValue);
         }
+
+        if (CollectionUtils.isNotEmpty(scheduledActionDetailModel.getActionKeys())) {
+            uiActionKey.execute(scheduledActionDetailModel.getActionKeys(), webElement);
+        }
     }
 
+    /**
+     * @return UIActionType
+     */
     @Override
     public UIActionType actionName() {
         return UIActionType.INPUT;
