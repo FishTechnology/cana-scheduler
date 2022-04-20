@@ -24,7 +24,7 @@ public class UIActionKeyImpl implements UIActionKey {
     @Override
     public CharSequence getKeyCode(ActionKeyModel actionKeyModel) {
         var uiKey = EnumUtils.getEnumIgnoreCase(UIKey.class, actionKeyModel.getKey());
-        Keys keys;
+        Keys keys = null;
         switch (uiKey) {
             case NULL:
                 keys = Keys.NULL;

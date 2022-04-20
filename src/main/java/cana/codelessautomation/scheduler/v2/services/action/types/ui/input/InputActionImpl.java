@@ -69,6 +69,9 @@ public class InputActionImpl implements UIAction {
             for (UIInputType uiInputType : uiInputTypes) {
                 if (StringUtils.equalsAnyIgnoreCase(uiInputType.uiInputTypeName().name(), uiInputTypeName.name())) {
                     uiInputType.execute(schedulerDto, webElement, tokenValue);
+                    if (CollectionUtils.isNotEmpty(scheduledActionDetailModel.getActionKeys())) {
+                        uiActionKey.execute(scheduledActionDetailModel.getActionKeys(), webElement);
+                    }
                     return;
                 }
             }
